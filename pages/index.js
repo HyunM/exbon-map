@@ -1,6 +1,7 @@
 import GoogleMapReact from "google-map-react";
 import { apiKey } from "../apiKey.js";
 import { useState } from "react";
+import TextField from "@material-ui/core/TextField";
 
 export default function Index() {
   const ex1 = {
@@ -10,7 +11,12 @@ export default function Index() {
     },
     zoom: 8,
   };
-  const AnyReactComponent = ({ text, info }) => (
+  const AnyReactComponent = ({
+    ProjectID,
+    ProjectGroup,
+    ProjectName,
+    ProjectAddress,
+  }) => (
     <div
       style={{
         color: "red",
@@ -18,9 +24,16 @@ export default function Index() {
         fontWeight: "800",
         fontSize: "1.5em",
       }}
-      onClick={() => setstate({ ProjectID: text, ProjectInfo: info })}
+      onClick={() =>
+        setstate({
+          ProjectID: ProjectID,
+          ProjectGroup: ProjectGroup,
+          ProjectName: ProjectName,
+          ProjectAddress: ProjectAddress,
+        })
+      }
     >
-      {text}
+      {ProjectID}
     </div>
   );
   const data = {
@@ -51,11 +64,16 @@ export default function Index() {
       },
     ],
   };
-  const [state, setstate] = useState({ ProjectID: "", ProjectInfo: "" });
+  const [state, setstate] = useState({
+    ProjectID: "",
+    ProjectGroup: "",
+    ProjectName: "",
+    ProjectAddress: "",
+  });
 
   return (
     <div style={{ display: "flex" }}>
-      <div style={{ height: "100vh", width: "60%" }}>
+      <div style={{ height: "100vh", width: "80%" }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: apiKey }}
           defaultCenter={ex1.center}
@@ -66,17 +84,26 @@ export default function Index() {
               <AnyReactComponent
                 lat={item.lat}
                 lng={item.lng}
-                text={item.ProjectID}
                 key={item.ProjectID}
-                info={item.ProjectInfo}
+                ProjectID={item.ProjectID}
+                ProjectGroup={item.ProjectGroup}
+                ProjectName={item.ProjectName}
+                ProjectAddress={item.ProjectAddress}
               />
             );
           })}
         </GoogleMapReact>
       </div>
-      <div style={{ height: "100vh", width: "40%" }}>
-        <h1>{state.ProjectID}</h1>
-        <h4>{state.ProjectInfo}</h4>
+      <div style={{ height: "100vh", width: "20%" }}>
+        <TextField
+          id="ProjectID"
+          label="Project ID"
+          defaultValue={0}
+          value={state.ProjectID}
+        />
+        <p>Project Group: {state.ProjectGroup}</p>
+        <p>Project Name: {state.ProjectName}</p>
+        <p>Project Address: {state.ProjectAddress}</p>
       </div>
     </div>
   );
