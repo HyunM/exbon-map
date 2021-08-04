@@ -8,7 +8,7 @@ export default function Index() {
       lat: 33.76176289096943,
       lng: -117.92945707982629,
     },
-    zoom: 11,
+    zoom: 8,
   };
   const AnyReactComponent = ({ text, info }) => (
     <div
@@ -26,20 +26,26 @@ export default function Index() {
   const data = {
     project: [
       {
-        ProjectID: 8111,
-        ProjectInfo: "This is 8111.",
-        lat: 33.76176289096943,
-        lng: -117.92945707982629,
+        ProjectID: 6236,
+        ProjectGroup: "CSUB J20",
+        ProjectName: "SCI II Room 336",
+        ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
+        lat: 35.34763148279404,
+        lng: -119.1008342523971,
       },
       {
-        ProjectID: 8222,
-        ProjectInfo: "This is 8222.",
+        ProjectID: 6078,
+        ProjectGroup: "CSUF J20",
+        ProjectName: "Campus Exterior Repair",
+        ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
         lat: 33.759963306897774,
         lng: -117.92870727216075,
       },
       {
-        ProjectID: 8333,
-        ProjectInfo: "This is 8333.",
+        ProjectID: 6300,
+        ProjectGroup: "LACCD M20",
+        ProjectName: "ELAC Campus Wide Duct Cleaning",
+        ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
         lat: 33.72466095133255,
         lng: -117.94675948336074,
       },
