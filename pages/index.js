@@ -58,31 +58,32 @@ export default function Index() {
       {ProjectID}
     </div>
   );
-  // const AnyReactComponent2 = ({
-  //   ProjectID,
-  //   ProjectGroup,
-  //   ProjectName,
-  //   ProjectAddress,
-  // }) => (
-  //   <div
-  //     style={{
-  //       color: "red",
-  //       cursor: "pointer",
-  //       fontWeight: "800",
-  //       fontSize: "1.5em",
-  //     }}
-  //     onClick={() =>
-  //       setstate({
-  //         ProjectID: ProjectID,
-  //         ProjectGroup: ProjectGroup,
-  //         ProjectName: ProjectName,
-  //         ProjectAddress: ProjectAddress,
-  //       })
-  //     }
-  //   >
-  //     {ProjectID}
-  //   </div>
-  // );
+  const AnyReactComponent2 = () => (
+    <div
+      style={{
+        position: "absolute",
+        width: 30,
+        height: 25,
+        left: -40 / 2,
+        top: -40 / 2,
+
+        border: "3px solid #3639f4",
+        borderRadius: 0,
+        backgroundColor: "white",
+        textAlign: "center",
+        color: "#754fdf",
+        fontSize: 11,
+        fontWeight: "500",
+        padding: 4,
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      OFFICE
+    </div>
+  );
 
   const data = {
     project: [
@@ -111,6 +112,10 @@ export default function Index() {
         lng: -118.25801648828637,
       },
     ],
+    office: {
+      lat: 33.76179647059898,
+      lng: -117.92936766691095,
+    },
   };
   const [state, setstate] = useState({
     ProjectID: "",
@@ -174,6 +179,7 @@ export default function Index() {
             ProjectName={data.project[2].ProjectName}
             ProjectAddress={data.project[2].ProjectAddress}
           />
+          <AnyReactComponent2 lat={data.office.lat} lng={data.office.lng} />
         </GoogleMapReact>
       </div>
       <div style={{ height: "98vh", width: "20%", marginLeft: "20px" }}>
