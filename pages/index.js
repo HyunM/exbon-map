@@ -3,6 +3,7 @@ import { apiKey } from "../apiKey.js";
 import { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import styles from "./index.module.css";
+import Switch from "@material-ui/core/Switch";
 
 export default function Index() {
   const ex1 = {
@@ -118,43 +119,7 @@ export default function Index() {
     ProjectAddress: "",
   });
 
-  const getMapOptions = maps => {
-    return {
-      streetViewControl: false,
-      scaleControl: true,
-      fullscreenControl: true,
-      styles: [
-        {
-          featureType: "poi.business",
-          elementType: "labels",
-          stylers: [
-            {
-              visibility: "off",
-            },
-          ],
-        },
-      ],
-      gestureHandling: "greedy",
-      disableDoubleClickZoom: true,
-      minZoom: 5,
-      maxZoom: 18,
-
-      mapTypeControl: true,
-      mapTypeId: maps.MapTypeId.ROADMAP,
-      mapTypeControlOptions: {
-        style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: maps.ControlPosition.BOTTOM_CENTER,
-        mapTypeIds: [
-          maps.MapTypeId.ROADMAP,
-          maps.MapTypeId.SATELLITE,
-          maps.MapTypeId.HYBRID,
-        ],
-      },
-
-      zoomControl: true,
-      clickableIcons: false,
-    };
-  };
+  const [satelliteState, setSatelliteState] = useState(false);
 
   return (
     <div style={{ display: "flex" }}>
@@ -163,7 +128,11 @@ export default function Index() {
           bootstrapURLKeys={{ key: apiKey }}
           defaultCenter={ex1.center}
           defaultZoom={ex1.zoom}
-          options={getMapOptions}
+          options={
+            satelliteState == true
+              ? map => ({ mapTypeId: map.MapTypeId.SATELLITE })
+              : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
+          }
         >
           {/* {data.project.map(item => {
             return (
@@ -249,6 +218,30 @@ export default function Index() {
         >
           Project Address: {state.ProjectAddress}
         </TextField>
+        <br />
+        <br />
+        <div style={{ display: "flex" }}>
+          <p
+            style={{
+              fontFamily: "sans-serif",
+              marginTop: "10px",
+              fontWeight: "500",
+              color: "#807a7a",
+            }}
+          >
+            Satellite
+          </p>
+          <Switch
+            checked={satelliteState}
+            onChange={
+              satelliteState == true
+                ? () => setSatelliteState(false)
+                : () => setSatelliteState(true)
+            }
+            name="check"
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+        </div>
       </div>
     </div>
   );
