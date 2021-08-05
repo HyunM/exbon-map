@@ -12,6 +12,7 @@ export default function Index() {
     },
     zoom: 8,
   };
+
   const AnyReactComponent = ({
     ProjectID,
     ProjectGroup,
@@ -19,11 +20,26 @@ export default function Index() {
     ProjectAddress,
   }) => (
     <div
+      className={styles["marker-label"]}
       style={{
-        color: "red",
+        position: "absolute",
+        width: 25,
+        height: 25,
+        left: -40 / 2,
+        top: -40 / 2,
+
+        border: "3px solid #f44336",
+        borderRadius: 40,
+        backgroundColor: "white",
+        textAlign: "center",
+        color: "#3f51b5",
+        fontSize: 13,
+        fontWeight: "500",
+        padding: 4,
         cursor: "pointer",
-        fontWeight: "800",
-        fontSize: "1.5em",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
       onClick={() =>
         setstate({
@@ -37,6 +53,32 @@ export default function Index() {
       {ProjectID}
     </div>
   );
+  // const AnyReactComponent2 = ({
+  //   ProjectID,
+  //   ProjectGroup,
+  //   ProjectName,
+  //   ProjectAddress,
+  // }) => (
+  //   <div
+  //     style={{
+  //       color: "red",
+  //       cursor: "pointer",
+  //       fontWeight: "800",
+  //       fontSize: "1.5em",
+  //     }}
+  //     onClick={() =>
+  //       setstate({
+  //         ProjectID: ProjectID,
+  //         ProjectGroup: ProjectGroup,
+  //         ProjectName: ProjectName,
+  //         ProjectAddress: ProjectAddress,
+  //       })
+  //     }
+  //   >
+  //     {ProjectID}
+  //   </div>
+  // );
+
   const data = {
     project: [
       {
@@ -52,8 +94,8 @@ export default function Index() {
         ProjectGroup: "CSUF J20",
         ProjectName: "Campus Exterior Repair",
         ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
-        lat: 33.759963306897774,
-        lng: -117.92870727216075,
+        lat: 33.88223690824987,
+        lng: -117.88930859993005,
       },
       {
         ProjectID: 6300,
@@ -80,7 +122,7 @@ export default function Index() {
           defaultCenter={ex1.center}
           defaultZoom={ex1.zoom}
         >
-          {data.project.map(item => {
+          {/* {data.project.map(item => {
             return (
               <AnyReactComponent
                 lat={item.lat}
@@ -92,7 +134,34 @@ export default function Index() {
                 ProjectAddress={item.ProjectAddress}
               />
             );
-          })}
+          })} */}
+          <AnyReactComponent
+            lat={data.project[0].lat}
+            lng={data.project[0].lng}
+            key={data.project[0].ProjectID}
+            ProjectID={data.project[0].ProjectID}
+            ProjectGroup={data.project[0].ProjectGroup}
+            ProjectName={data.project[0].ProjectName}
+            ProjectAddress={data.project[0].ProjectAddress}
+          />
+          <AnyReactComponent
+            lat={data.project[1].lat}
+            lng={data.project[1].lng}
+            key={data.project[1].ProjectID}
+            ProjectID={data.project[1].ProjectID}
+            ProjectGroup={data.project[1].ProjectGroup}
+            ProjectName={data.project[1].ProjectName}
+            ProjectAddress={data.project[1].ProjectAddress}
+          />
+          <AnyReactComponent
+            lat={data.project[2].lat}
+            lng={data.project[2].lng}
+            key={data.project[2].ProjectID}
+            ProjectID={data.project[2].ProjectID}
+            ProjectGroup={data.project[2].ProjectGroup}
+            ProjectName={data.project[2].ProjectName}
+            ProjectAddress={data.project[2].ProjectAddress}
+          />
         </GoogleMapReact>
       </div>
       <div style={{ height: "100vh", width: "20%", marginLeft: "20px" }}>
