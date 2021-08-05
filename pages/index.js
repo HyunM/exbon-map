@@ -123,14 +123,14 @@ export default function Index() {
 
   return (
     <div style={{ display: "flex" }}>
-      <div style={{ height: "100vh", width: "80%" }}>
+      <div style={{ height: "98vh", width: "80%" }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: apiKey }}
           defaultCenter={ex1.center}
           defaultZoom={ex1.zoom}
           options={
             satelliteState == true
-              ? map => ({ mapTypeId: map.MapTypeId.SATELLITE })
+              ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
               : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
           }
         >
@@ -176,7 +176,7 @@ export default function Index() {
           />
         </GoogleMapReact>
       </div>
-      <div style={{ height: "100vh", width: "20%", marginLeft: "20px" }}>
+      <div style={{ height: "98vh", width: "20%", marginLeft: "20px" }}>
         <br />
         <TextField
           className={styles["right__project-id"]}
@@ -218,9 +218,8 @@ export default function Index() {
         >
           Project Address: {state.ProjectAddress}
         </TextField>
-        <br />
-        <br />
-        <div style={{ display: "flex" }}>
+
+        <div style={{ display: "flex", marginTop: "710px" }}>
           <p
             style={{
               fontFamily: "sans-serif",
