@@ -140,7 +140,7 @@ export default function Index() {
       maxZoom: 18,
 
       mapTypeControl: true,
-      mapTypeId: maps.MapTypeId.MAP,
+      mapTypeId: maps.MapTypeId.ROADMAP,
       mapTypeControlOptions: {
         style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
         position: maps.ControlPosition.BOTTOM_CENTER,
