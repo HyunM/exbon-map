@@ -106,8 +106,8 @@ export default function Index() {
         ProjectGroup: "LACCD M20",
         ProjectName: "ELAC Campus Wide Duct Cleaning",
         ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
-        lat: 33.72466095133255,
-        lng: -117.94675948336074,
+        lat: 34.048918222592384,
+        lng: -118.25801648828637,
       },
     ],
   };
