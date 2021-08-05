@@ -2,6 +2,7 @@ import GoogleMapReact from "google-map-react";
 import { apiKey } from "../apiKey.js";
 import { useState } from "react";
 import TextField from "@material-ui/core/TextField";
+import styles from "./index.module.css";
 
 export default function Index() {
   const ex1 = {
@@ -94,16 +95,48 @@ export default function Index() {
           })}
         </GoogleMapReact>
       </div>
-      <div style={{ height: "100vh", width: "20%" }}>
+      <div style={{ height: "100vh", width: "20%", marginLeft: "20px" }}>
+        <br />
         <TextField
+          className={styles["right__project-id"]}
           id="ProjectID"
           label="Project ID"
           defaultValue={0}
           value={state.ProjectID}
         />
-        <p>Project Group: {state.ProjectGroup}</p>
-        <p>Project Name: {state.ProjectName}</p>
-        <p>Project Address: {state.ProjectAddress}</p>
+        <br />
+        <br />
+        <TextField
+          className={styles["right__project-group"]}
+          id="ProjectGroup"
+          label="Project Group"
+          defaultValue={0}
+          value={state.ProjectGroup}
+        >
+          Project Group: {state.ProjectGroup}
+        </TextField>
+        <br />
+        <br />
+        <TextField
+          className={styles["right__project-name"]}
+          id="ProjectName"
+          label="Project Name"
+          defaultValue={0}
+          value={state.ProjectName}
+        >
+          Project Name: {state.ProjectName}
+        </TextField>
+        <br />
+        <br />
+        <TextField
+          className={styles["right__project-address"]}
+          id="ProjectAddress"
+          label="Project Address"
+          defaultValue={0}
+          value={state.ProjectAddress}
+        >
+          Project Address: {state.ProjectAddress}
+        </TextField>
       </div>
     </div>
   );

@@ -1,0 +1,16 @@
+.right__project-id input {
+  width: 100px;
+  font-weight: 600;
+}
+.right__project-group input {
+  width: 140px;
+  font-weight: 600;
+}
+.right__project-name input {
+  width: 250px;
+  font-weight: 600;
+}
+.right__project-address input {
+  width: 350px;
+  font-weight: 600;
+}
