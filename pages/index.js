@@ -118,6 +118,44 @@ export default function Index() {
     ProjectAddress: "",
   });
 
+  const getMapOptions = maps => {
+    return {
+      streetViewControl: false,
+      scaleControl: true,
+      fullscreenControl: true,
+      styles: [
+        {
+          featureType: "poi.business",
+          elementType: "labels",
+          stylers: [
+            {
+              visibility: "off",
+            },
+          ],
+        },
+      ],
+      gestureHandling: "greedy",
+      disableDoubleClickZoom: true,
+      minZoom: 5,
+      maxZoom: 18,
+
+      mapTypeControl: true,
+      mapTypeId: maps.MapTypeId.MAP,
+      mapTypeControlOptions: {
+        style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: maps.ControlPosition.BOTTOM_CENTER,
+        mapTypeIds: [
+          maps.MapTypeId.ROADMAP,
+          maps.MapTypeId.SATELLITE,
+          maps.MapTypeId.HYBRID,
+        ],
+      },
+
+      zoomControl: true,
+      clickableIcons: false,
+    };
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <div style={{ height: "100vh", width: "80%" }}>
@@ -125,6 +163,7 @@ export default function Index() {
           bootstrapURLKeys={{ key: apiKey }}
           defaultCenter={ex1.center}
           defaultZoom={ex1.zoom}
+          options={getMapOptions}
         >
           {/* {data.project.map(item => {
             return (
