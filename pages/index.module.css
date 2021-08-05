@@ -3,6 +3,11 @@
   background-color: tomato !important;
 }
 
+.marker-label-select {
+  color: rgb(250, 250, 250) !important;
+  background-color: tomato !important;
+}
+
 .right__project-id input {
   width: 100px;
   font-weight: 600;

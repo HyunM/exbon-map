@@ -20,7 +20,11 @@ export default function Index() {
     ProjectAddress,
   }) => (
     <div
-      className={styles["marker-label"]}
+      className={
+        state.ProjectID == ProjectID
+          ? styles["marker-label-select"]
+          : styles["marker-label"]
+      }
       style={{
         position: "absolute",
         width: 25,
