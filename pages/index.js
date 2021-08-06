@@ -158,30 +158,7 @@ export default function Index() {
       },
       temp: 1,
     };
-    // let str = "";
-    // for (let i = 0; i < tempData.project.length; i++) {
-    //   str += tempData.project[i].lat + "%2C" + tempData.project[i].lng + "%7C";
-    // }
 
-    // axios({
-    //   method: "get",
-    //   url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
-    //   // url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
-    //   timeout: 5000, // 5 seconds timeout
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Credentials": "true",
-    //   },
-    // }).then(response => {
-    //   for (let i = 0; i < tempData.project.length; i++) {
-    //     tempData.project[i].Distance =
-    //       response.data.rows[0].elements[i].distance.text;
-    //     tempData.project[i].Duration =
-    //       response.data.rows[0].elements[i].duration.text;
-    //   }
-    //
-    // });
     setData(tempData);
   }, []);
 
