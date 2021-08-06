@@ -378,7 +378,7 @@ export default function Index() {
           Duration : {state.Duration}
         </TextField>
 
-        <div style={{ display: "flex", marginTop: "580px" }}>
+        <div style={{ display: "flex", marginTop: "100px" }}>
           <p
             style={{
               fontFamily: "sans-serif",
