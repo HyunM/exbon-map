@@ -210,6 +210,7 @@ export default function Index() {
         origins: [origin1],
         destinations: [destinationA, destinationB, destinationC],
         travelMode: "DRIVING",
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
       },
       callback
     );
