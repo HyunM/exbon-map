@@ -205,24 +205,31 @@ export default function Index() {
       33.76179647059898,
       -117.92936766691095
     );
-    var destinationA = new google.maps.LatLng(
-      35.34763148279404,
-      -119.1008342523971
-    );
-    var destinationB = new google.maps.LatLng(
-      33.88223690824987,
-      -117.88930859993005
-    );
-    var destinationC = new google.maps.LatLng(
-      34.048918222592384,
-      -118.25801648828637
-    );
+
+    // var destinationA = new google.maps.LatLng(
+    //   35.34763148279404,
+    //   -119.1008342523971
+    // );
+    // var destinationB = new google.maps.LatLng(
+    //   33.88223690824987,
+    //   -117.88930859993005
+    // );
+    // var destinationC = new google.maps.LatLng(
+    //   34.048918222592384,
+    //   -118.25801648828637
+    // );
+    let arrayDestination = [];
+    for (let i = 0; i < data.project.length; i++) {
+      arrayDestination.push(
+        new google.maps.LatLng(data.project[i].lat, data.project[i].lng)
+      );
+    }
 
     var service = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix(
       {
         origins: [origin1],
-        destinations: [destinationA, destinationB, destinationC],
+        destinations: arrayDestination,
         travelMode: "DRIVING",
         unitSystem: google.maps.UnitSystem.IMPERIAL,
       },
