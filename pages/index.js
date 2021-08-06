@@ -102,6 +102,7 @@ export default function Index() {
 
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
+  const [loadAPI, setLoadAPI] = useState(false);
 
   useEffect(() => {
     let tempData = {
@@ -148,31 +149,78 @@ export default function Index() {
       str += tempData.project[i].lat + "%2C" + tempData.project[i].lng + "%7C";
     }
 
-    axios({
-      method: "get",
-      url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
-      // url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
-      timeout: 5000, // 5 seconds timeout
-      headers: {},
-      dataType: "json",
-      contentType: "application/json",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      proxy: {
-        host: "23.92.24.234",
-        port: 7010,
-      },
-    }).then(response => {
+    // axios({
+    //   method: "get",
+    //   url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
+    //   // url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
+    //   timeout: 5000, // 5 seconds timeout
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Credentials": "true",
+    //   },
+    // }).then(response => {
+    //   for (let i = 0; i < tempData.project.length; i++) {
+    //     tempData.project[i].Distance =
+    //       response.data.rows[0].elements[i].distance.text;
+    //     tempData.project[i].Duration =
+    //       response.data.rows[0].elements[i].duration.text;
+    //   }
+    //
+    // });
+    setData(tempData);
+  }, []);
+
+  useEffect(() => {
+    if (loadAPI != false) {
+      let tempData = data;
       for (let i = 0; i < tempData.project.length; i++) {
         tempData.project[i].Distance =
-          response.data.rows[0].elements[i].distance.text;
+          loadAPI.rows[0].elements[i].distance.text;
         tempData.project[i].Duration =
-          response.data.rows[0].elements[i].duration.text;
+          loadAPI.rows[0].elements[i].duration.text;
       }
+
       setData(tempData);
-    });
-  }, []);
+    }
+  }, [loadAPI]);
+
+  const handleApiLoaded = (map, maps) => {
+    // use map and maps objects
+    var origin1 = new google.maps.LatLng(
+      33.76179647059898,
+      -117.92936766691095
+    );
+    var destinationA = new google.maps.LatLng(
+      35.34763148279404,
+      -119.1008342523971
+    );
+    var destinationB = new google.maps.LatLng(
+      33.88223690824987,
+      -117.88930859993005
+    );
+    var destinationC = new google.maps.LatLng(
+      34.048918222592384,
+      -118.25801648828637
+    );
+
+    var service = new google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+      {
+        origins: [origin1],
+        destinations: [destinationA, destinationB, destinationC],
+        travelMode: "DRIVING",
+      },
+      callback
+    );
+
+    function callback(response, status) {
+      // See Parsing the Results for
+      // the basics of a callback function.
+
+      setLoadAPI(response);
+    }
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -188,6 +236,8 @@ export default function Index() {
                 ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
                 : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
             }
+            yesIWantToUseGoogleMapApiInternals
+            onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
           >
             {/* {data.project.map(item => {
             return (
