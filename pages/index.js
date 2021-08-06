@@ -49,16 +49,30 @@ export default function Index() {
         justifyContent: "center",
         alignItems: "center",
       }}
-      onClick={() =>
-        setstate({
+      onClick={() => {
+        let index = 0;
+        let newDistance = "";
+        let newDuration = "";
+        if (Distance == "") {
+          for (let i = 0; i < data.project.length; i++) {
+            if (data.project[i].ProjectID == ProjectID) {
+              index = i;
+              break;
+            }
+          }
+          newDistance = loadAPI.rows[0].elements[index].distance.text;
+          newDuration = loadAPI.rows[0].elements[index].duration.text;
+        }
+
+        setState({
           ProjectID: ProjectID,
           ProjectGroup: ProjectGroup,
           ProjectName: ProjectName,
           ProjectAddress: ProjectAddress,
-          Distance: Distance,
-          Duration: Duration,
-        })
-      }
+          Distance: Distance == "" ? newDistance : Distance,
+          Duration: Duration == "" ? newDuration : Duration,
+        });
+      }}
     >
       {ProjectID}
     </div>
@@ -91,7 +105,7 @@ export default function Index() {
   );
 
   useEffect(() => {}, []);
-  const [state, setstate] = useState({
+  const [state, setState] = useState({
     ProjectID: "",
     ProjectGroup: "",
     ProjectName: "",
@@ -144,10 +158,10 @@ export default function Index() {
       },
       temp: 1,
     };
-    let str = "";
-    for (let i = 0; i < tempData.project.length; i++) {
-      str += tempData.project[i].lat + "%2C" + tempData.project[i].lng + "%7C";
-    }
+    // let str = "";
+    // for (let i = 0; i < tempData.project.length; i++) {
+    //   str += tempData.project[i].lat + "%2C" + tempData.project[i].lng + "%7C";
+    // }
 
     // axios({
     //   method: "get",
@@ -350,7 +364,7 @@ export default function Index() {
         <TextField
           className={styles["right__project-duration"]}
           id="ProjectDuration"
-          label="Duration From Office"
+          label="Duration From HQ"
           defaultValue={0}
           value={state.Duration}
         >
