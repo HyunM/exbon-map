@@ -81,8 +81,8 @@ export default function Index() {
     <div
       style={{
         position: "absolute",
-        width: 30,
-        height: 25,
+        width: 20,
+        height: 20,
         left: -40 / 2,
         top: -40 / 2,
 
@@ -100,7 +100,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      OFFICE
+      HQ
     </div>
   );
 
