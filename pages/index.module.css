@@ -24,3 +24,13 @@
   width: 350px;
   font-weight: 600;
 }
+
+.right__project-distance input {
+  width: 155px;
+  font-weight: 600;
+}
+
+.right__project-duration input {
+  width: 155px;
+  font-weight: 600;
+}

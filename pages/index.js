@@ -1,9 +1,10 @@
 import GoogleMapReact from "google-map-react";
 import { apiKey } from "../apiKey.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import styles from "./index.module.css";
 import Switch from "@material-ui/core/Switch";
+import axios from "axios";
 
 export default function Index() {
   const ex1 = {
@@ -19,6 +20,8 @@ export default function Index() {
     ProjectGroup,
     ProjectName,
     ProjectAddress,
+    Distance,
+    Duration,
   }) => (
     <div
       className={
@@ -52,6 +55,8 @@ export default function Index() {
           ProjectGroup: ProjectGroup,
           ProjectName: ProjectName,
           ProjectAddress: ProjectAddress,
+          Distance: Distance,
+          Duration: Duration,
         })
       }
     >
@@ -85,61 +90,101 @@ export default function Index() {
     </div>
   );
 
-  const data = {
-    project: [
-      {
-        ProjectID: 6236,
-        ProjectGroup: "CSUB J20",
-        ProjectName: "SCI II Room 336",
-        ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
-        lat: 35.34763148279404,
-        lng: -119.1008342523971,
-      },
-      {
-        ProjectID: 6078,
-        ProjectGroup: "CSUF J20",
-        ProjectName: "Campus Exterior Repair",
-        ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
-        lat: 33.88223690824987,
-        lng: -117.88930859993005,
-      },
-      {
-        ProjectID: 6300,
-        ProjectGroup: "LACCD M20",
-        ProjectName: "ELAC Campus Wide Duct Cleaning",
-        ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
-        lat: 34.048918222592384,
-        lng: -118.25801648828637,
-      },
-    ],
-    office: {
-      lat: 33.76179647059898,
-      lng: -117.92936766691095,
-    },
-  };
+  useEffect(() => {}, []);
   const [state, setstate] = useState({
     ProjectID: "",
     ProjectGroup: "",
     ProjectName: "",
     ProjectAddress: "",
+    Distance: "",
+    Duration: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
+  const [data, setData] = useState({ temp: 0 });
+
+  useEffect(() => {
+    let tempData = {
+      project: [
+        {
+          ProjectID: 6236,
+          ProjectGroup: "CSUB J20",
+          ProjectName: "SCI II Room 336",
+          ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
+          lat: 35.34763148279404,
+          lng: -119.1008342523971,
+          Distance: "",
+          Duration: "",
+        },
+        {
+          ProjectID: 6078,
+          ProjectGroup: "CSUF J20",
+          ProjectName: "Campus Exterior Repair",
+          ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
+          lat: 33.88223690824987,
+          lng: -117.88930859993005,
+          Distance: "",
+          Duration: "",
+        },
+        {
+          ProjectID: 6300,
+          ProjectGroup: "LACCD M20",
+          ProjectName: "ELAC Campus Wide Duct Cleaning",
+          ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
+          lat: 34.048918222592384,
+          lng: -118.25801648828637,
+          Distance: "",
+          Duration: "",
+        },
+      ],
+      office: {
+        lat: 33.76179647059898,
+        lng: -117.92936766691095,
+      },
+      temp: 1,
+    };
+    let str = "";
+    for (let i = 0; i < tempData.project.length; i++) {
+      str += tempData.project[i].lat + "%2C" + tempData.project[i].lng + "%7C";
+    }
+
+    axios({
+      method: "get",
+      url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
+      timeout: 5000, // 5 seconds timeout
+      headers: {},
+      dataType: "json",
+      contentType: "application/json",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    }).then(response => {
+      for (let i = 0; i < tempData.project.length; i++) {
+        tempData.project[i].Distance =
+          response.data.rows[0].elements[i].distance.text;
+        tempData.project[i].Duration =
+          response.data.rows[0].elements[i].duration.text;
+      }
+      setData(tempData);
+    });
+  }, []);
 
   return (
     <div style={{ display: "flex" }}>
+      {console.log(data)}
       <div style={{ height: "98vh", width: "80%" }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: apiKey }}
-          defaultCenter={ex1.center}
-          defaultZoom={ex1.zoom}
-          options={
-            satelliteState == true
-              ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
-              : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
-          }
-        >
-          {/* {data.project.map(item => {
+        {data.temp == 1 && (
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: apiKey }}
+            defaultCenter={ex1.center}
+            defaultZoom={ex1.zoom}
+            options={
+              satelliteState == true
+                ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
+                : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
+            }
+          >
+            {/* {data.project.map(item => {
             return (
               <AnyReactComponent
                 lat={item.lat}
@@ -152,35 +197,43 @@ export default function Index() {
               />
             );
           })} */}
-          <AnyReactComponent
-            lat={data.project[0].lat}
-            lng={data.project[0].lng}
-            key={data.project[0].ProjectID}
-            ProjectID={data.project[0].ProjectID}
-            ProjectGroup={data.project[0].ProjectGroup}
-            ProjectName={data.project[0].ProjectName}
-            ProjectAddress={data.project[0].ProjectAddress}
-          />
-          <AnyReactComponent
-            lat={data.project[1].lat}
-            lng={data.project[1].lng}
-            key={data.project[1].ProjectID}
-            ProjectID={data.project[1].ProjectID}
-            ProjectGroup={data.project[1].ProjectGroup}
-            ProjectName={data.project[1].ProjectName}
-            ProjectAddress={data.project[1].ProjectAddress}
-          />
-          <AnyReactComponent
-            lat={data.project[2].lat}
-            lng={data.project[2].lng}
-            key={data.project[2].ProjectID}
-            ProjectID={data.project[2].ProjectID}
-            ProjectGroup={data.project[2].ProjectGroup}
-            ProjectName={data.project[2].ProjectName}
-            ProjectAddress={data.project[2].ProjectAddress}
-          />
-          <AnyReactComponent2 lat={data.office.lat} lng={data.office.lng} />
-        </GoogleMapReact>
+
+            <AnyReactComponent
+              lat={data.project[0].lat}
+              lng={data.project[0].lng}
+              key={data.project[0].ProjectID}
+              ProjectID={data.project[0].ProjectID}
+              ProjectGroup={data.project[0].ProjectGroup}
+              ProjectName={data.project[0].ProjectName}
+              ProjectAddress={data.project[0].ProjectAddress}
+              Distance={data.project[0].Distance}
+              Duration={data.project[0].Duration}
+            />
+            <AnyReactComponent
+              lat={data.project[1].lat}
+              lng={data.project[1].lng}
+              key={data.project[1].ProjectID}
+              ProjectID={data.project[1].ProjectID}
+              ProjectGroup={data.project[1].ProjectGroup}
+              ProjectName={data.project[1].ProjectName}
+              ProjectAddress={data.project[1].ProjectAddress}
+              Distance={data.project[1].Distance}
+              Duration={data.project[1].Duration}
+            />
+            <AnyReactComponent
+              lat={data.project[2].lat}
+              lng={data.project[2].lng}
+              key={data.project[2].ProjectID}
+              ProjectID={data.project[2].ProjectID}
+              ProjectGroup={data.project[2].ProjectGroup}
+              ProjectName={data.project[2].ProjectName}
+              ProjectAddress={data.project[2].ProjectAddress}
+              Distance={data.project[2].Distance}
+              Duration={data.project[2].Duration}
+            />
+            <AnyReactComponent2 lat={data.office.lat} lng={data.office.lng} />
+          </GoogleMapReact>
+        )}
       </div>
       <div style={{ height: "98vh", width: "20%", marginLeft: "20px" }}>
         <br />
@@ -225,7 +278,30 @@ export default function Index() {
           Project Address: {state.ProjectAddress}
         </TextField>
 
-        <div style={{ display: "flex", marginTop: "710px" }}>
+        <br />
+        <br />
+        <TextField
+          className={styles["right__project-distance"]}
+          id="ProjectDistance"
+          label="Distance From Office"
+          defaultValue={0}
+          value={state.Distance}
+        >
+          Distance: {state.Distance}
+        </TextField>
+        <br />
+        <br />
+        <TextField
+          className={styles["right__project-duration"]}
+          id="ProjectDuration"
+          label="Duration From Office"
+          defaultValue={0}
+          value={state.Duration}
+        >
+          Duration : {state.Duration}
+        </TextField>
+
+        <div style={{ display: "flex", marginTop: "580px" }}>
           <p
             style={{
               fontFamily: "sans-serif",
