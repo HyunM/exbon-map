@@ -157,7 +157,11 @@ export default function Index() {
       dataType: "json",
       contentType: "application/json",
       headers: {
-        "X-Requested-With": "XMLHttpRequest",
+        "Access-Control-Allow-Origin": "*",
+      },
+      proxy: {
+        host: "23.92.24.234",
+        port: 7010,
       },
     }).then(response => {
       for (let i = 0; i < tempData.project.length; i++) {
