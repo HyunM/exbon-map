@@ -150,7 +150,8 @@ export default function Index() {
 
     axios({
       method: "get",
-      url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
+      url: `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
+      // url: `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=33.76179647059898,-117.92936766691095&destinations=${str}&key=AIzaSyDKt0n2IoLQNJ4EyeiuVfR6EX22JGe9jvU`,
       timeout: 5000, // 5 seconds timeout
       headers: {},
       dataType: "json",
@@ -283,7 +284,7 @@ export default function Index() {
         <TextField
           className={styles["right__project-distance"]}
           id="ProjectDistance"
-          label="Distance From Office"
+          label="Distance From HQ"
           defaultValue={0}
           value={state.Distance}
         >
