@@ -249,7 +249,7 @@ export default function Index() {
       },
       (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
-          directionsRenderer.setDirections(result);
+          // directionsRenderer.setDirections(result);
         } else {
           console.error(`error fetching directions ${result}`);
         }
