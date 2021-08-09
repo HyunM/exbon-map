@@ -1,4 +1,7 @@
-import GoogleMapReact from "google-map-react";
+import GoogleMapReact, {
+  GoogleMap,
+  DirectionsRenderer,
+} from "google-map-react";
 import { apiKey } from "../apiKey.js";
 import { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
@@ -116,6 +119,7 @@ export default function Index() {
 
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
+  const [direction, setDirection] = useState(null);
   const [loadAPI, setLoadAPI] = useState(false);
 
   useEffect(() => {
@@ -213,6 +217,45 @@ export default function Index() {
       callback
     );
 
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    const origin = { lat: 33.76176289096943, lng: -117.92945707982629 };
+    const destination = { lat: 41.756795, lng: -78.954298 };
+    const destination2 = {
+      lat: 35.34763148279404,
+      lng: -119.1008342523971,
+    };
+
+    directionsService.route(
+      {
+        origin: origin,
+        destination: destination2,
+        travelMode: google.maps.TravelMode.DRIVING,
+        waypoints: [
+          {
+            location: new google.maps.LatLng(
+              33.88223690824987,
+              -117.88930859993005
+            ),
+          },
+          {
+            location: new google.maps.LatLng(
+              34.048918222592384,
+              -118.25801648828637
+            ),
+          },
+        ],
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(result);
+        } else {
+          console.error(`error fetching directions ${result}`);
+        }
+      }
+    );
+
     function callback(response, status) {
       // See Parsing the Results for
       // the basics of a callback function.
@@ -251,7 +294,6 @@ export default function Index() {
               />
             );
           })} */}
-
             <AnyReactComponent
               lat={data.project[0].lat}
               lng={data.project[0].lng}
