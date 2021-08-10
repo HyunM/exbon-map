@@ -19,18 +19,22 @@ const MapWithADirectionsRenderer = compose(
   lifecycle({
     componentDidMount() {
       const DirectionsService = new google.maps.DirectionsService();
+
       const origin = {
         lat: 33.7379089,
         lng: -117.9548602,
       };
       const destination = { lat: 41.756795, lng: -78.954298 };
       const destination2 = { lat: 33.73922288, lng: -117.9547119 };
+      const stepDisplay = new google.maps.InfoWindow();
+      stepDisplay.setContent("text");
 
       DirectionsService.route(
         {
           origin: origin,
           destination: destination2,
           travelMode: google.maps.TravelMode.DRIVING,
+          optimizeWaypoints: true,
           waypoints: [
             {
               location: new google.maps.LatLng(33.731713, -117.954614),
@@ -64,7 +68,7 @@ const MapWithADirectionsRenderer = compose(
   })
 )(props => (
   <GoogleMap
-    defaultZoom={7}
+    defaultZoom={4}
     options={{
       mapTypeControl: false,
       streetViewControl: false,

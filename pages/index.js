@@ -119,7 +119,6 @@ export default function Index() {
 
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
-  const [direction, setDirection] = useState(null);
   const [loadAPI, setLoadAPI] = useState(false);
 
   useEffect(() => {
@@ -218,38 +217,91 @@ export default function Index() {
     );
 
     const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
+    // const directionsRenderer = new google.maps.DirectionsRenderer({
+    //   suppressMarkers: true,
+    // });
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+    });
     directionsRenderer.setMap(map);
-    const origin = { lat: 33.76176289096943, lng: -117.92945707982629 };
-    const destination = { lat: 41.756795, lng: -78.954298 };
-    const destination2 = {
-      lat: 35.34763148279404,
-      lng: -119.1008342523971,
+
+    const timeData = [
+      { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
+      { date: "2021-07-25 14:15:53", lat: 33.731713, lng: -117.954614 },
+      { date: "2021-07-25 14:16:45", lat: 33.7264542, lng: -117.95469 },
+      { date: "2021-07-25 14:17:10", lat: 33.7215794, lng: -117.9546431 },
+      { date: "2021-07-25 14:17:37", lat: 33.716913, lng: -117.9546024 },
+      { date: "2021-07-25 14:32:20", lat: 33.7341136, lng: -117.9546168 },
+      { date: "2021-07-25 14:33:22", lat: 33.73922288, lng: -117.9547119 },
+    ];
+
+    let wayPoints = [];
+    for (let i = 0; i < timeData.length; i++) {
+      if (i != 0 && i != timeData.length - 1) {
+        wayPoints.push({
+          location: new google.maps.LatLng(timeData[i].lat, timeData[i].lng),
+        });
+      }
+    }
+    const origin = {
+      lat: timeData[0].lat,
+      lng: timeData[0].lng,
     };
+    const destination = {
+      lat: timeData[timeData.length - 1].lat,
+      lng: timeData[timeData.length - 1].lng,
+    };
+
+    for (let i = 0; i < timeData.length; i++) {
+      const contentString = `<div><p>${timeData[i].date}</p></div>`;
+      const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+      });
+      const location = { lat: timeData[i].lat, lng: timeData[i].lng };
+      const marker = new google.maps.Marker({
+        position: location,
+        map,
+        label: String.fromCharCode(65 + i),
+      });
+      marker.addListener("click", () => {
+        infowindow.open({
+          anchor: marker,
+          map,
+          shouldFocus: false,
+        });
+      });
+    }
+
+    // const contentString =
+    //   "<div><p>testtestestsetestsetsetsetsetsetsetsetsete</p></div>";
+    // const infowindow = new google.maps.InfoWindow({
+    //   content: contentString,
+    // });
+    // const marker = new google.maps.Marker({
+    //   position: testLocation,
+    //   map,
+    //   title: "TEST",
+    //   label: "B",
+    // });
+    // marker.addListener("click", () => {
+    //   infowindow.open({
+    //     anchor: marker,
+    //     map,
+    //     shouldFocus: false,
+    //   });
+    // });
 
     directionsService.route(
       {
         origin: origin,
-        destination: destination2,
+        destination: destination,
         travelMode: google.maps.TravelMode.DRIVING,
-        waypoints: [
-          {
-            location: new google.maps.LatLng(
-              33.88223690824987,
-              -117.88930859993005
-            ),
-          },
-          {
-            location: new google.maps.LatLng(
-              34.048918222592384,
-              -118.25801648828637
-            ),
-          },
-        ],
+        waypoints: wayPoints,
       },
+
       (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
-          // directionsRenderer.setDirections(result);
+          directionsRenderer.setDirections(result);
         } else {
           console.error(`error fetching directions ${result}`);
         }
