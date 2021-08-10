@@ -259,11 +259,13 @@ export default function Index() {
       });
       const location = { lat: timeData[i].lat, lng: timeData[i].lng };
       const marker = new google.maps.Marker({
+        //marker 생성
         position: location,
         map,
         label: String.fromCharCode(65 + i),
       });
       marker.addListener("click", () => {
+        // marker click event
         infowindow.open({
           anchor: marker,
           map,
@@ -271,25 +273,6 @@ export default function Index() {
         });
       });
     }
-
-    // const contentString =
-    //   "<div><p>testtestestsetestsetsetsetsetsetsetsetsete</p></div>";
-    // const infowindow = new google.maps.InfoWindow({
-    //   content: contentString,
-    // });
-    // const marker = new google.maps.Marker({
-    //   position: testLocation,
-    //   map,
-    //   title: "TEST",
-    //   label: "B",
-    // });
-    // marker.addListener("click", () => {
-    //   infowindow.open({
-    //     anchor: marker,
-    //     map,
-    //     shouldFocus: false,
-    //   });
-    // });
 
     directionsService.route(
       {
@@ -311,7 +294,6 @@ export default function Index() {
     function callback(response, status) {
       // See Parsing the Results for
       // the basics of a callback function.
-
       setLoadAPI(response);
     }
   };
