@@ -18,16 +18,10 @@ export default function Project() {
     zoom: 8,
   };
 
-  const ProjectComponent = ({
-    Label,
-    ProjectID,
-    ProjectGroup,
-    ProjectName,
-    ProjectAddress,
-  }) => (
+  const ProjectComponent = ({ Label, MaxProjectID, lat, lng }) => (
     <div
       className={
-        state.ProjectID == ProjectID
+        state.MaxProjectID == MaxProjectID
           ? styles["marker-label-select"]
           : Label.toString().length < 2
           ? styles["marker-label-count"]
@@ -53,14 +47,32 @@ export default function Project() {
         justifyContent: "center",
         alignItems: "center",
       }}
-      // onClick={() => {
-      //   setState({
-      //     ProjectID: ProjectID,
-      //     ProjectGroup: ProjectGroup,
-      //     ProjectName: ProjectName,
-      //     ProjectAddress: ProjectAddress,
-      //   });
-      // }}
+      onClick={() => {
+        if (Label.toString().length > 3) {
+          setState({
+            Label: Label,
+            MaxProjectID: MaxProjectID,
+            lat: lat,
+            lng: lng,
+          });
+        } else {
+          let tempProjectArray = [];
+          let tempLabelArray = [];
+          data.projectInfo.forEach(item => {
+            if (item.lat == lat && item.lng == lng) {
+              tempProjectArray.push(item);
+              tempLabelArray.push(item.JobNumber);
+            }
+          });
+
+          setState({
+            Label: tempLabelArray,
+            MaxProjectID: MaxProjectID,
+            lat: lat,
+            lng: lng,
+          });
+        }
+      }}
     >
       {Label}
     </div>
@@ -94,10 +106,8 @@ export default function Project() {
 
   useEffect(() => {}, []);
   const [state, setState] = useState({
-    ProjectID: "",
-    ProjectGroup: "",
-    ProjectName: "",
-    ProjectAddress: "",
+    Label: "",
+    MaxProjectID: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
@@ -175,7 +185,7 @@ export default function Project() {
 
   return (
     <div style={{ display: "flex" }}>
-      {console.log(data)}
+      {console.log(state)}
       <div style={{ height: "98vh", width: "80%" }}>
         {data.temp == 1 && (
           <GoogleMapReact
@@ -195,9 +205,11 @@ export default function Project() {
                 <ProjectComponent
                   lat={item.lat}
                   lng={item.lng}
-                  key={item.ProjectID}
+                  key={item.MaxProjectID}
                   Label={item.Label}
-                  ProjectID={item.ProjectID}
+                  MaxProjectID={item.MaxProjectID}
+                  lat={item.lat}
+                  lng={item.lng}
                   // ProjectGroup={item.ProjectGroup}
                   // ProjectName={item.ProjectName}
                   // ProjectAddress={item.ProjectAddress}
@@ -239,46 +251,48 @@ export default function Project() {
       >
         <div>
           <br />
+          <TextField
+            className={styles["right__project-job-number"]}
+            id="JobNumber"
+            label="Job Number"
+            defaultValue={0}
+            value={
+              state.Label.toString().length > 3 ? state.Label : state.Label
+            }
+          />
+          <br />
+          <br />
           {/* <TextField
-          className={styles["right__project-id"]}
-          id="ProjectID"
-          label="Project ID"
-          defaultValue={0}
-          value={state.ProjectID}
-        />
-        <br />
-        <br />
-        <TextField
-          className={styles["right__project-group"]}
-          id="ProjectGroup"
-          label="Project Group"
-          defaultValue={0}
-          value={state.ProjectGroup}
-        >
-          Project Group: {state.ProjectGroup}
-        </TextField>
-        <br />
-        <br />
-        <TextField
-          className={styles["right__project-name"]}
-          id="ProjectName"
-          label="Project Name"
-          defaultValue={0}
-          value={state.ProjectName}
-        >
-          Project Name: {state.ProjectName}
-        </TextField>
-        <br />
-        <br />
-        <TextField
-          className={styles["right__project-address"]}
-          id="ProjectAddress"
-          label="Project Address"
-          defaultValue={0}
-          value={state.ProjectAddress}
-        >
-          Project Address: {state.ProjectAddress}
-        </TextField> */}
+            className={styles["right__project-group"]}
+            id="ProjectGroup"
+            label="Project Group"
+            defaultValue={0}
+            value={state.ProjectGroup}
+          >
+            Project Group: {state.ProjectGroup}
+          </TextField>
+          <br />
+          <br />
+          <TextField
+            className={styles["right__project-name"]}
+            id="ProjectName"
+            label="Project Name"
+            defaultValue={0}
+            value={state.ProjectName}
+          >
+            Project Name: {state.ProjectName}
+          </TextField>
+          <br />
+          <br />
+          <TextField
+            className={styles["right__project-address"]}
+            id="ProjectAddress"
+            label="Project Address"
+            defaultValue={0}
+            value={state.ProjectAddress}
+          >
+            Project Address: {state.ProjectAddress}
+          </TextField> */}
         </div>
         <div
           style={{
