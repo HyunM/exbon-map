@@ -174,7 +174,7 @@ export default function Project() {
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
           >
-            {data.project.map(item => {
+            {/* {data.project.map(item => {
               return (
                 <ProjectComponent
                   lat={item.lat}
@@ -187,7 +187,7 @@ export default function Project() {
                   // ProjectAddress={item.ProjectAddress}
                 />
               );
-            })}
+            })} */}
 
             {/* <ProjectComponent
               lat={data.project[1].lat}
@@ -211,9 +211,19 @@ export default function Project() {
           </GoogleMapReact>
         )}
       </div>
-      <div style={{ height: "98vh", width: "20%", marginLeft: "20px" }}>
-        <br />
-        {/* <TextField
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "98vh",
+          width: "20%",
+          marginLeft: "20px",
+        }}
+      >
+        <div>
+          <br />
+          {/* <TextField
           className={styles["right__project-id"]}
           id="ProjectID"
           label="Project ID"
@@ -253,8 +263,13 @@ export default function Project() {
         >
           Project Address: {state.ProjectAddress}
         </TextField> */}
-
-        <div style={{ display: "flex", marginTop: "100px" }}>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "100px",
+          }}
+        >
           <p
             style={{
               fontFamily: "sans-serif",
