@@ -63,7 +63,6 @@ export default function Project() {
       // }}
     >
       {Label}
-      {console.log(Label)}
     </div>
   );
   const HQ = () => (
@@ -109,7 +108,7 @@ export default function Project() {
     lng: -117.92936766691095,
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     // let tempData = {
     //   project: [
     //     {
@@ -143,15 +142,32 @@ export default function Project() {
     //   },
     //   temp: 1,
     // };
-
-    axios({
+    let tempProjectLocation = [];
+    let tempProjectInfo = [];
+    await axios({
       method: "get",
       url: `/api/project-same-address`,
       timeout: 5000, // 5 seconds timeout
       headers: {},
     }).then(response => {
+      tempProjectLocation = response.data;
       // console.log(response);
-      setData({ project: response.data, temp: 1 });
+    });
+
+    await axios({
+      method: "get",
+      url: `/api/project-info`,
+      timeout: 5000, // 5 seconds timeout
+      headers: {},
+    }).then(response => {
+      tempProjectInfo = response.data;
+      // console.log(response);
+    });
+
+    setData({
+      projectLocation: tempProjectLocation,
+      projectInfo: tempProjectInfo,
+      temp: 1,
     });
   }, []);
 
@@ -174,7 +190,7 @@ export default function Project() {
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
           >
-            {/* {data.project.map(item => {
+            {data.projectLocation.map(item => {
               return (
                 <ProjectComponent
                   lat={item.lat}
@@ -187,7 +203,7 @@ export default function Project() {
                   // ProjectAddress={item.ProjectAddress}
                 />
               );
-            })} */}
+            })}
 
             {/* <ProjectComponent
               lat={data.project[1].lat}

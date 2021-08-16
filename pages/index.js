@@ -198,10 +198,26 @@ export default function Index() {
     //   34.048918222592384,
     //   -118.25801648828637
     // );
+
+    const tempArrayDestination = [
+      { lat: 34.721659, lng: -120.532379 },
+      { lat: 36.2383794, lng: -115.055188 },
+      { lat: 33.7657707, lng: -118.2109489 },
+      { lat: 36.8108284, lng: -119.7462226 },
+      { lat: 33.8822013, lng: -117.8893837 },
+      { lat: 33.8822013, lng: -117.8893837 },
+      { lat: 34.0410891, lng: -118.1509726 },
+      { lat: 33.8822013, lng: -117.8893837 },
+      { lat: 35.3475588, lng: -119.1026197 },
+      { lat: 33.8822013, lng: -117.8893837 },
+    ];
     let arrayDestination = [];
-    for (let i = 0; i < data.project.length; i++) {
+    for (let i = 0; i < tempArrayDestination.length; i++) {
       arrayDestination.push(
-        new google.maps.LatLng(data.project[i].lat, data.project[i].lng)
+        new google.maps.LatLng(
+          tempArrayDestination[i].lat,
+          tempArrayDestination[i].lng
+        )
       );
     }
 
@@ -300,7 +316,12 @@ export default function Index() {
 
   return (
     <div style={{ display: "flex" }}>
-      {console.log(data)}
+      {loadAPI.rows != undefined &&
+        loadAPI.rows[0].elements.map((item, index) => {
+          console.log(index + 51 + ": " + item.distance.text);
+        })}
+
+      {console.log()}
       <div style={{ height: "98vh", width: "80%" }}>
         {data.temp == 1 && (
           <GoogleMapReact
