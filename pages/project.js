@@ -5,7 +5,7 @@ import GoogleMapReact, {
 import { apiKey } from "../apiKey.js";
 import { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
-import styles from "./index.module.css";
+import styles from "./project.module.css";
 import Switch from "@material-ui/core/Switch";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ export default function Project() {
   };
 
   const ProjectComponent = ({
+    Label,
     ProjectID,
     ProjectGroup,
     ProjectName,
@@ -28,6 +29,8 @@ export default function Project() {
       className={
         state.ProjectID == ProjectID
           ? styles["marker-label-select"]
+          : Label.toString().length < 2
+          ? styles["marker-label-count"]
           : styles["marker-label"]
       }
       style={{
@@ -59,7 +62,8 @@ export default function Project() {
       //   });
       // }}
     >
-      {ProjectID}
+      {Label}
+      {console.log(Label)}
     </div>
   );
   const HQ = () => (
@@ -170,28 +174,21 @@ export default function Project() {
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
           >
-            {/* {data.project.map(item => {
-            return (
-              <ProjectComponent
-                lat={item.lat}
-                lng={item.lng}
-                key={item.ProjectID}
-                ProjectID={item.ProjectID}
-                ProjectGroup={item.ProjectGroup}
-                ProjectName={item.ProjectName}
-                ProjectAddress={item.ProjectAddress}
-              />
-            );
-          })} */}
-            <ProjectComponent
-              lat={data.project[0].lat}
-              lng={data.project[0].lng}
-              key={data.project[0].ProjectID}
-              ProjectID={data.project[0].ProjectID}
-              // ProjectGroup={data.project[0].ProjectGroup}
-              // ProjectName={data.project[0].ProjectName}
-              // ProjectAddress={data.project[0].ProjectAddress}
-            />
+            {data.project.map(item => {
+              return (
+                <ProjectComponent
+                  lat={item.lat}
+                  lng={item.lng}
+                  key={item.ProjectID}
+                  Label={item.Label}
+                  ProjectID={item.ProjectID}
+                  // ProjectGroup={item.ProjectGroup}
+                  // ProjectName={item.ProjectName}
+                  // ProjectAddress={item.ProjectAddress}
+                />
+              );
+            })}
+
             {/* <ProjectComponent
               lat={data.project[1].lat}
               lng={data.project[1].lng}

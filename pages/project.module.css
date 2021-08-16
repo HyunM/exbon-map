@@ -1,0 +1,45 @@
+.marker-label:hover {
+  color: rgb(250, 250, 250) !important;
+  background-color: tomato !important;
+}
+
+.marker-label-select {
+  color: rgb(250, 250, 250) !important;
+  background-color: tomato !important;
+}
+
+.marker-label-count {
+  color: rgb(255, 0, 0) !important;
+}
+
+.marker-label-count:hover {
+  color: rgb(250, 250, 250) !important;
+  background-color: tomato !important;
+}
+
+.right__project-id input {
+  width: 100px;
+  font-weight: 600;
+}
+.right__project-group input {
+  width: 140px;
+  font-weight: 600;
+}
+.right__project-name input {
+  width: 300px;
+  font-weight: 600;
+}
+.right__project-address input {
+  width: 380px;
+  font-weight: 600;
+}
+
+.right__project-distance input {
+  width: 155px;
+  font-weight: 600;
+}
+
+.right__project-duration input {
+  width: 155px;
+  font-weight: 600;
+}
