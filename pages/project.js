@@ -50,14 +50,14 @@ export default function Project() {
         justifyContent: "center",
         alignItems: "center",
       }}
-      onClick={() => {
-        setState({
-          ProjectID: ProjectID,
-          ProjectGroup: ProjectGroup,
-          ProjectName: ProjectName,
-          ProjectAddress: ProjectAddress,
-        });
-      }}
+      // onClick={() => {
+      //   setState({
+      //     ProjectID: ProjectID,
+      //     ProjectGroup: ProjectGroup,
+      //     ProjectName: ProjectName,
+      //     ProjectAddress: ProjectAddress,
+      //   });
+      // }}
     >
       {ProjectID}
     </div>
@@ -100,43 +100,55 @@ export default function Project() {
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
   const [loadAPI, setLoadAPI] = useState(false);
+  const office = {
+    lat: 33.76179647059898,
+    lng: -117.92936766691095,
+  };
 
   useEffect(() => {
-    let tempData = {
-      project: [
-        {
-          ProjectID: 6236,
-          ProjectGroup: "CSUB J20",
-          ProjectName: "SCI II Room 336",
-          ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
-          lat: 35.34763148279404,
-          lng: -119.1008342523971,
-        },
-        {
-          ProjectID: 6078,
-          ProjectGroup: "CSUF J20",
-          ProjectName: "Campus Exterior Repair",
-          ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
-          lat: 33.88223690824987,
-          lng: -117.88930859993005,
-        },
-        {
-          ProjectID: 6300,
-          ProjectGroup: "LACCD M20",
-          ProjectName: "ELAC Campus Wide Duct Cleaning",
-          ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
-          lat: 34.048918222592384,
-          lng: -118.25801648828637,
-        },
-      ],
-      office: {
-        lat: 33.76179647059898,
-        lng: -117.92936766691095,
-      },
-      temp: 1,
-    };
+    // let tempData = {
+    //   project: [
+    //     {
+    //       ProjectID: 6236,
+    //       ProjectGroup: "CSUB J20",
+    //       ProjectName: "SCI II Room 336",
+    //       ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
+    //       lat: 35.34763148279404,
+    //       lng: -119.1008342523971,
+    //     },
+    //     {
+    //       ProjectID: 6078,
+    //       ProjectGroup: "CSUF J20",
+    //       ProjectName: "Campus Exterior Repair",
+    //       ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
+    //       lat: 33.88223690824987,
+    //       lng: -117.88930859993005,
+    //     },
+    //     {
+    //       ProjectID: 6300,
+    //       ProjectGroup: "LACCD M20",
+    //       ProjectName: "ELAC Campus Wide Duct Cleaning",
+    //       ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
+    //       lat: 34.048918222592384,
+    //       lng: -118.25801648828637,
+    //     },
+    //   ],
+    //   office: {
+    //     lat: 33.76179647059898,
+    //     lng: -117.92936766691095,
+    //   },
+    //   temp: 1,
+    // };
 
-    setData(tempData);
+    axios({
+      method: "get",
+      url: `/api/project-same-address`,
+      timeout: 5000, // 5 seconds timeout
+      headers: {},
+    }).then(response => {
+      // console.log(response);
+      setData({ project: response.data, temp: 1 });
+    });
   }, []);
 
   const handleApiLoaded = (map, maps) => {};
@@ -176,11 +188,11 @@ export default function Project() {
               lng={data.project[0].lng}
               key={data.project[0].ProjectID}
               ProjectID={data.project[0].ProjectID}
-              ProjectGroup={data.project[0].ProjectGroup}
-              ProjectName={data.project[0].ProjectName}
-              ProjectAddress={data.project[0].ProjectAddress}
+              // ProjectGroup={data.project[0].ProjectGroup}
+              // ProjectName={data.project[0].ProjectName}
+              // ProjectAddress={data.project[0].ProjectAddress}
             />
-            <ProjectComponent
+            {/* <ProjectComponent
               lat={data.project[1].lat}
               lng={data.project[1].lng}
               key={data.project[1].ProjectID}
@@ -197,14 +209,14 @@ export default function Project() {
               ProjectGroup={data.project[2].ProjectGroup}
               ProjectName={data.project[2].ProjectName}
               ProjectAddress={data.project[2].ProjectAddress}
-            />
-            <HQ lat={data.office.lat} lng={data.office.lng} />
+            /> */}
+            <HQ lat={office.lat} lng={office.lng} />
           </GoogleMapReact>
         )}
       </div>
       <div style={{ height: "98vh", width: "20%", marginLeft: "20px" }}>
         <br />
-        <TextField
+        {/* <TextField
           className={styles["right__project-id"]}
           id="ProjectID"
           label="Project ID"
@@ -243,7 +255,7 @@ export default function Project() {
           value={state.ProjectAddress}
         >
           Project Address: {state.ProjectAddress}
-        </TextField>
+        </TextField> */}
 
         <div style={{ display: "flex", marginTop: "100px" }}>
           <p
