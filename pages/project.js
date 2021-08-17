@@ -55,6 +55,7 @@ export default function Project() {
             lat: lat,
             lng: lng,
           });
+          setRightPanelState({ JobNumber: Label });
         } else {
           let tempProjectArray = [];
           let tempLabelArray = [];
@@ -64,7 +65,7 @@ export default function Project() {
               tempLabelArray.push(item.JobNumber);
             }
           });
-
+          setRightPanelState({ JobNumber: 0 });
           setState({
             Label: tempLabelArray,
             MaxProjectID: MaxProjectID,
@@ -110,48 +111,21 @@ export default function Project() {
     MaxProjectID: "",
   });
 
+  const [rightPanelState, setRightPanelState] = useState({
+    JobNumber: 0,
+    ProjectID: 0,
+    ProjectGroup: "",
+    ProjectName: "",
+  });
+
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
-  const [loadAPI, setLoadAPI] = useState(false);
   const office = {
     lat: 33.76179647059898,
     lng: -117.92936766691095,
   };
 
   useEffect(async () => {
-    // let tempData = {
-    //   project: [
-    //     {
-    //       ProjectID: 6236,
-    //       ProjectGroup: "CSUB J20",
-    //       ProjectName: "SCI II Room 336",
-    //       ProjectAddress: "9001 Stockdale Hwy, Bakersfield, CA 93311",
-    //       lat: 35.34763148279404,
-    //       lng: -119.1008342523971,
-    //     },
-    //     {
-    //       ProjectID: 6078,
-    //       ProjectGroup: "CSUF J20",
-    //       ProjectName: "Campus Exterior Repair",
-    //       ProjectAddress: "800 N State College Blvd, Fullerton, CA 92831",
-    //       lat: 33.88223690824987,
-    //       lng: -117.88930859993005,
-    //     },
-    //     {
-    //       ProjectID: 6300,
-    //       ProjectGroup: "LACCD M20",
-    //       ProjectName: "ELAC Campus Wide Duct Cleaning",
-    //       ProjectAddress: "770 Wilshire Blvd, Los Angeles, CA 90017",
-    //       lat: 34.048918222592384,
-    //       lng: -118.25801648828637,
-    //     },
-    //   ],
-    //   office: {
-    //     lat: 33.76179647059898,
-    //     lng: -117.92936766691095,
-    //   },
-    //   temp: 1,
-    // };
     let tempProjectLocation = [];
     let tempProjectInfo = [];
     await axios({
@@ -271,8 +245,14 @@ export default function Project() {
               >
                 Job Number
               </p>
-              <select className={styles["select-job-number"]}>
-                <option>--------</option>
+              <select
+                className={styles["select-job-number"]}
+                value={rightPanelState.JobNumber}
+                onChange={e =>
+                  setRightPanelState({ JobNumber: e.target.value })
+                }
+              >
+                <option value={0}>--------</option>
                 {state.Label.map((item, index) => {
                   return (
                     <option key={index} value={item}>
