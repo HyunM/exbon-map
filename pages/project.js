@@ -112,6 +112,12 @@ export default function Project() {
   });
 
   const [jobNumberSelect, setJobNumberSelect] = useState(0);
+  const [rightPanelState, setRightPanelState] = useState({
+    ProjectID: 0,
+    JobNumber: 0,
+    ProjectGroup: "",
+    ProjectName: "",
+  });
 
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
@@ -149,6 +155,23 @@ export default function Project() {
       temp: 1,
     });
   }, []);
+
+  useEffect(() => {
+    if (jobNumberSelect != 0) {
+      for (let i = 0; i < data.projectInfo.length; i++) {
+        if (data.projectInfo[i].JobNumber.text == jobNumberSelect) {
+          // setRightPanelState({
+          //   ProjectID: 0,
+          //   JobNumber: 0,
+          //   ProjectGroup: "",
+          //   ProjectName: "",
+          // });
+          console.log(data.projectInfo[i]);
+          break;
+        }
+      }
+    }
+  }, [jobNumberSelect]);
 
   const handleApiLoaded = (map, maps) => {};
 
