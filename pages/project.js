@@ -55,7 +55,7 @@ export default function Project() {
             lat: lat,
             lng: lng,
           });
-          setRightPanelState({ JobNumber: Label });
+          setJobNumberSelect(Label);
         } else {
           let tempProjectArray = [];
           let tempLabelArray = [];
@@ -65,7 +65,7 @@ export default function Project() {
               tempLabelArray.push(item.JobNumber);
             }
           });
-          setRightPanelState({ JobNumber: 0 });
+          setJobNumberSelect(0);
           setState({
             Label: tempLabelArray,
             MaxProjectID: MaxProjectID,
@@ -111,12 +111,7 @@ export default function Project() {
     MaxProjectID: "",
   });
 
-  const [rightPanelState, setRightPanelState] = useState({
-    JobNumber: 0,
-    ProjectID: 0,
-    ProjectGroup: "",
-    ProjectName: "",
-  });
+  const [jobNumberSelect, setJobNumberSelect] = useState(0);
 
   const [satelliteState, setSatelliteState] = useState(false);
   const [data, setData] = useState({ temp: 0 });
@@ -247,10 +242,8 @@ export default function Project() {
               </p>
               <select
                 className={styles["select-job-number"]}
-                value={rightPanelState.JobNumber}
-                onChange={e =>
-                  setRightPanelState({ JobNumber: e.target.value })
-                }
+                value={jobNumberSelect}
+                onChange={e => setJobNumberSelect(e.target.value)}
               >
                 <option value={0}>--------</option>
                 {state.Label.map((item, index) => {
