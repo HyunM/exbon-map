@@ -251,7 +251,7 @@ export default function Project() {
       >
         <div>
           <br />
-          <TextField
+          {/* <TextField
             className={styles["right__project-job-number"]}
             id="JobNumber"
             label="Job Number"
@@ -259,7 +259,46 @@ export default function Project() {
             value={
               state.Label.toString().length > 3 ? state.Label : state.Label
             }
-          />
+          /> */}
+          {Array.isArray(state.Label) ? (
+            <div style={{ display: "flex" }}>
+              <p
+                style={{
+                  margin: "0px",
+                  marginRight: "10px",
+                  fontFamily: "sans-serif",
+                }}
+              >
+                Job Number
+              </p>
+              <select className={styles["select-job-number"]}>
+                <option>--------</option>
+                {state.Label.map((item, index) => {
+                  return (
+                    <option key={index} value={item}>
+                      {item}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          ) : (
+            <div style={{ display: "flex" }}>
+              <p
+                style={{
+                  margin: "0px",
+                  marginRight: "10px",
+                  fontFamily: "sans-serif",
+                }}
+              >
+                Job Number
+              </p>
+              <select className={styles["select-job-number"]}>
+                <option value={state.Label}>{state.Label}</option>
+              </select>
+            </div>
+          )}
+
           <br />
           <br />
           {/* <TextField
