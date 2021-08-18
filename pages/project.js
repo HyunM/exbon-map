@@ -158,14 +158,15 @@ export default function Project() {
 
   useEffect(() => {
     if (jobNumberSelect != 0) {
+      console.log(data.projectInfo);
       for (let i = 0; i < data.projectInfo.length; i++) {
-        if (data.projectInfo[i].JobNumber.text == jobNumberSelect) {
-          // setRightPanelState({
-          //   ProjectID: 0,
-          //   JobNumber: 0,
-          //   ProjectGroup: "",
-          //   ProjectName: "",
-          // });
+        if (data.projectInfo[i].JobNumber == jobNumberSelect) {
+          setRightPanelState({
+            JobNumber: data.projectInfo[i].JobNumber,
+            ProjectID: data.projectInfo[i].ProjectID,
+            ProjectGroup: data.projectInfo[i].ProjectGroup,
+            ProjectName: data.projectInfo[i].ProjectName,
+          });
           console.log(data.projectInfo[i]);
           break;
         }
@@ -297,14 +298,14 @@ export default function Project() {
 
           <br />
           <br />
-          {/* <TextField
+          <TextField
             className={styles["right__project-group"]}
             id="ProjectGroup"
             label="Project Group"
             defaultValue={0}
-            value={state.ProjectGroup}
+            value={rightPanelState.ProjectGroup}
           >
-            Project Group: {state.ProjectGroup}
+            Project Group: {rightPanelState.ProjectGroup}
           </TextField>
           <br />
           <br />
@@ -313,9 +314,9 @@ export default function Project() {
             id="ProjectName"
             label="Project Name"
             defaultValue={0}
-            value={state.ProjectName}
+            value={rightPanelState.ProjectName}
           >
-            Project Name: {state.ProjectName}
+            Project Name: {rightPanelState.ProjectName}
           </TextField>
           <br />
           <br />
@@ -324,10 +325,10 @@ export default function Project() {
             id="ProjectAddress"
             label="Project Address"
             defaultValue={0}
-            value={state.ProjectAddress}
+            value={rightPanelState.ProjectAddress}
           >
-            Project Address: {state.ProjectAddress}
-          </TextField> */}
+            Project Address: {rightPanelState.ProjectAddress}
+          </TextField>
         </div>
         <div
           style={{
