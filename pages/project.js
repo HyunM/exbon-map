@@ -171,6 +171,13 @@ export default function Project() {
           break;
         }
       }
+    } else {
+      setRightPanelState({
+        JobNumber: 0,
+        ProjectID: 0,
+        ProjectGroup: "",
+        ProjectName: "",
+      });
     }
   }, [jobNumberSelect]);
 
