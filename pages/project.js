@@ -117,6 +117,7 @@ export default function Project() {
     JobNumber: 0,
     ProjectGroup: "",
     ProjectName: "",
+    ProjectAddress: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
@@ -166,6 +167,7 @@ export default function Project() {
             ProjectID: data.projectInfo[i].ProjectID,
             ProjectGroup: data.projectInfo[i].ProjectGroup,
             ProjectName: data.projectInfo[i].ProjectName,
+            ProjectAddress: data.projectInfo[i].Address,
           });
           console.log(data.projectInfo[i]);
           break;
@@ -177,6 +179,7 @@ export default function Project() {
         ProjectID: 0,
         ProjectGroup: "",
         ProjectName: "",
+        ProjectAddress: "",
       });
     }
   }, [jobNumberSelect]);
