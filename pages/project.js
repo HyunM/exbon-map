@@ -11,6 +11,7 @@ import axios from "axios";
 
 let tempProjectLocation = [];
 let tempProjectInfo = [];
+let tempPICList = [];
 
 export default function Project() {
   const ex1 = {
@@ -115,6 +116,7 @@ export default function Project() {
   });
 
   const [jobNumberSelect, setJobNumberSelect] = useState(0);
+  const [PICSelect, setPICSelect] = useState("");
   const [rightPanelState, setRightPanelState] = useState({
     ProjectID: 0,
     JobNumber: 0,
@@ -156,12 +158,14 @@ export default function Project() {
     }).then(response => {
       tempProjectInfo = response.data.recordsets[0];
       tempProjectLocation = response.data.recordsets[1];
+      tempPICList = response.data.recordsets[2];
       // console.log(response);
     });
 
     setData({
       projectLocation: tempProjectLocation,
       projectInfo: tempProjectInfo,
+      projectPIC: tempPICList,
       temp: 1,
     });
   }, []);
@@ -204,6 +208,59 @@ export default function Project() {
       });
     }
   }, [jobNumberSelect]);
+
+  useEffect(async () => {
+    if (PICSelect != "") {
+      setJobNumberSelect(0);
+      setRightPanelState({
+        JobNumber: 0,
+        ProjectID: 0,
+        ProjectGroup: "",
+        ProjectName: "",
+        ProjectAddress: "",
+        AddressLabel: "",
+        Distance: "",
+        Director: "",
+        PIC: "",
+        Associate1: "",
+        Associate2: "",
+        Associate3: "",
+      });
+      setState({
+        Label: 0,
+        MaxProjectID: 0,
+        lat: 0,
+        lng: 0,
+      });
+
+      let tempEmployeeProjectInfo = [];
+      let tempEmployeeProjectLocation = [];
+
+      await axios({
+        method: "get",
+        url: `/api/project-pic?EmployeeName=${PICSelect}`,
+        timeout: 5000, // 5 seconds timeout
+        headers: {},
+      }).then(response => {
+        tempEmployeeProjectInfo = response.data.recordsets[0];
+        tempEmployeeProjectLocation = response.data.recordsets[1];
+      });
+
+      setData({
+        projectInfo: tempEmployeeProjectInfo,
+        projectLocation: tempEmployeeProjectLocation,
+        projectPIC: tempPICList,
+        temp: 1,
+      });
+    } else {
+      setData({
+        projectInfo: tempProjectInfo,
+        projectLocation: tempProjectLocation,
+        projectPIC: tempPICList,
+        temp: 1,
+      });
+    }
+  }, [PICSelect]);
 
   const handleApiLoaded = (map, maps) => {};
 
@@ -387,99 +444,119 @@ export default function Project() {
         </div>
         <div
           style={{
-            height: "300px",
+            height: "500px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             marginTop: "50px",
           }}
         >
-          <div style={{ display: "flex" }}>
-            <p
-              style={{
-                margin: "0px",
-                marginRight: "10px",
-                fontFamily: "sans-serif",
-              }}
-            >
-              PIC
-            </p>
-            <select
-              className={styles["select-job-number"]}
-              value={jobNumberSelect}
-              onChange={e => setJobNumberSelect(e.target.value)}
-            >
-              <option value={0}>--------</option>
-              {/* {state.Label.map((item, index) => {
-                return (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                );
-              })} */}
-              {/* {console.log(state.Label)} */}
-            </select>
-          </div>
           <div>
-            {rightPanelState.Director && (
-              <>
-                <TextField
-                  className={styles["right__project-director"]}
-                  id="Director"
-                  label="Director"
-                  defaultValue={0}
-                  value={rightPanelState.Director}
-                >
-                  Director: {rightPanelState.Director}
-                </TextField>
-                <br />
-                <br />
-              </>
-            )}
-            {rightPanelState.Associate1 && (
-              <>
-                <TextField
-                  className={styles["right__project-associate1"]}
-                  id="Associate1"
-                  label="Associate1"
-                  defaultValue={0}
-                  value={rightPanelState.Associate1}
-                >
-                  Associate1: {rightPanelState.Associate1}
-                </TextField>
-                <br />
-                <br />
-              </>
-            )}
-            {rightPanelState.Associate2 && (
-              <>
-                <TextField
-                  className={styles["right__project-associate2"]}
-                  id="Associate2"
-                  label="Associate2"
-                  defaultValue={0}
-                  value={rightPanelState.Associate2}
-                >
-                  Associate2: {rightPanelState.Associate2}
-                </TextField>
-                <br />
-                <br />
-              </>
-            )}
-            {rightPanelState.Associate3 && (
-              <>
-                <TextField
-                  className={styles["right__project-associate3"]}
-                  id="Associate3"
-                  label="Associate3"
-                  defaultValue={0}
-                  value={rightPanelState.Associate3}
-                >
-                  Associate3: {rightPanelState.Associate3}
-                </TextField>
-                <br />
-              </>
-            )}
+            <div style={{ display: "flex" }}>
+              <p
+                style={{
+                  margin: "0px",
+                  marginRight: "10px",
+                  fontFamily: "sans-serif",
+                }}
+              >
+                PIC
+              </p>
+              <select
+                className={styles["select-pic"]}
+                value={PICSelect}
+                onChange={e => setPICSelect(e.target.value)}
+              >
+                <option value={""}>---------------------------------</option>
+
+                {data.temp == 1 &&
+                  data.projectPIC.map((item, index) => {
+                    return (
+                      <option key={item.EmployeeID} value={item.Estimator}>
+                        {item.Estimator} ({item.Count})
+                      </option>
+                    );
+                  })}
+                {/* {console.log(state.Label)} */}
+              </select>
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              {rightPanelState.Director && (
+                <>
+                  <TextField
+                    className={styles["right__project-director"]}
+                    id="Director"
+                    label="Director"
+                    defaultValue={0}
+                    value={rightPanelState.Director}
+                  >
+                    Director: {rightPanelState.Director}
+                  </TextField>
+                  <br />
+                  <br />
+                </>
+              )}
+              {rightPanelState.PIC && (
+                <>
+                  <TextField
+                    className={styles["right__project-pic"]}
+                    id="PIC"
+                    label="PIC"
+                    defaultValue={0}
+                    value={rightPanelState.PIC}
+                  >
+                    PIC: {rightPanelState.PIC}
+                  </TextField>
+                  <br />
+                  <br />
+                </>
+              )}
+
+              {rightPanelState.Associate1 && (
+                <>
+                  <TextField
+                    className={styles["right__project-associate1"]}
+                    id="Associate1"
+                    label="Associate1"
+                    defaultValue={0}
+                    value={rightPanelState.Associate1}
+                  >
+                    Associate1: {rightPanelState.Associate1}
+                  </TextField>
+                  <br />
+                  <br />
+                </>
+              )}
+              {rightPanelState.Associate2 && (
+                <>
+                  <TextField
+                    className={styles["right__project-associate2"]}
+                    id="Associate2"
+                    label="Associate2"
+                    defaultValue={0}
+                    value={rightPanelState.Associate2}
+                  >
+                    Associate2: {rightPanelState.Associate2}
+                  </TextField>
+                  <br />
+                  <br />
+                </>
+              )}
+              {rightPanelState.Associate3 && (
+                <>
+                  <TextField
+                    className={styles["right__project-associate3"]}
+                    id="Associate3"
+                    label="Associate3"
+                    defaultValue={0}
+                    value={rightPanelState.Associate3}
+                  >
+                    Associate3: {rightPanelState.Associate3}
+                  </TextField>
+                  <br />
+                </>
+              )}
+            </div>
           </div>
           <div
             style={{

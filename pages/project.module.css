@@ -43,6 +43,10 @@
   font-weight: 600;
 }
 
+.right__project-pic input {
+  width: 155px;
+  font-weight: 600;
+}
 .right__project-director input {
   width: 155px;
   font-weight: 600;
@@ -64,6 +68,18 @@
   display: inline-block;
   height: 20px;
   width: 80px;
+  color: #74646e;
+  border: 1px solid #c8bfc4;
+  border-radius: 4px;
+  box-shadow: inset 1px 1px 2px #ddd8dc;
+  background: #fff;
+  font-size: medium;
+}
+
+.select-pic {
+  display: inline-block;
+  height: 20px;
+  width: 200px;
   color: #74646e;
   border: 1px solid #c8bfc4;
   border-radius: 4px;
