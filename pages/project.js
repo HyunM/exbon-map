@@ -119,6 +119,7 @@ export default function Project() {
     ProjectName: "",
     ProjectAddress: "",
     AddressLabel: "",
+    Distance: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
@@ -160,7 +161,6 @@ export default function Project() {
 
   useEffect(() => {
     if (jobNumberSelect != 0) {
-      console.log(data.projectInfo);
       for (let i = 0; i < data.projectInfo.length; i++) {
         if (data.projectInfo[i].JobNumber == jobNumberSelect) {
           setRightPanelState({
@@ -170,8 +170,8 @@ export default function Project() {
             ProjectName: data.projectInfo[i].ProjectName,
             ProjectAddress: data.projectInfo[i].Address,
             AddressLabel: data.projectInfo[i].AddressLabel,
+            Distance: data.projectInfo[i].Distance,
           });
-          console.log(data.projectInfo[i]);
           break;
         }
       }
@@ -183,6 +183,7 @@ export default function Project() {
         ProjectName: "",
         ProjectAddress: "",
         AddressLabel: "",
+        Distance: "",
       });
     }
   }, [jobNumberSelect]);
@@ -191,7 +192,6 @@ export default function Project() {
 
   return (
     <div style={{ display: "flex" }}>
-      {console.log(state)}
       <div style={{ height: "98vh", width: "80%" }}>
         {data.temp == 1 && (
           <GoogleMapReact
@@ -310,7 +310,6 @@ export default function Project() {
           )}
 
           <br />
-          <br />
           <TextField
             className={styles["right__project-group"]}
             id="ProjectGroup"
@@ -353,33 +352,80 @@ export default function Project() {
           >
             Project Address: {rightPanelState.ProjectAddress}
           </TextField>
+          <br />
+          <br />
+          <TextField
+            className={styles["right__project-distance"]}
+            id="Distance"
+            label="Distance"
+            defaultValue={0}
+            value={
+              rightPanelState.Distance == ""
+                ? ""
+                : rightPanelState.Distance + " miles"
+            }
+          >
+            Distance: {rightPanelState.Distance} mi
+          </TextField>
         </div>
-        <div
-          style={{
-            display: "flex",
-            marginTop: "100px",
-          }}
-        >
-          <p
+        <div>
+          <div>
+            {/* <TextField
+              className={styles["right__project-distance"]}
+              id="Distance"
+              label="Distance"
+              defaultValue={0}
+              value={
+                rightPanelState.Distance == ""
+                  ? ""
+                  : rightPanelState.Distance + " miles"
+              }
+            >
+              Distance: {rightPanelState.Distance} mi
+            </TextField>
+            <br />
+            <br />
+            <TextField
+              className={styles["right__project-distance"]}
+              id="Distance"
+              label="Distance"
+              defaultValue={0}
+              value={
+                rightPanelState.Distance == ""
+                  ? ""
+                  : rightPanelState.Distance + " miles"
+              }
+            >
+              Distance: {rightPanelState.Distance} mi
+            </TextField> */}
+          </div>
+          <div
             style={{
-              fontFamily: "sans-serif",
-              marginTop: "10px",
-              fontWeight: "500",
-              color: "#807a7a",
+              display: "flex",
+              marginTop: "50px",
             }}
           >
-            Satellite
-          </p>
-          <Switch
-            checked={satelliteState}
-            onChange={
-              satelliteState == true
-                ? () => setSatelliteState(false)
-                : () => setSatelliteState(true)
-            }
-            name="check"
-            inputProps={{ "aria-label": "primary checkbox" }}
-          />
+            <p
+              style={{
+                fontFamily: "sans-serif",
+                marginTop: "10px",
+                fontWeight: "500",
+                color: "#807a7a",
+              }}
+            >
+              Satellite
+            </p>
+            <Switch
+              checked={satelliteState}
+              onChange={
+                satelliteState == true
+                  ? () => setSatelliteState(false)
+                  : () => setSatelliteState(true)
+              }
+              name="check"
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
+          </div>
         </div>
       </div>
     </div>
