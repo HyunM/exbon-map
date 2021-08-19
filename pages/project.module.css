@@ -29,6 +29,10 @@
   width: 300px;
   font-weight: 600;
 }
+.right__project-address-label input {
+  width: 380px;
+  font-weight: 600;
+}
 .right__project-address input {
   width: 380px;
   font-weight: 600;

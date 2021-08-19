@@ -118,6 +118,7 @@ export default function Project() {
     ProjectGroup: "",
     ProjectName: "",
     ProjectAddress: "",
+    AddressLabel: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
@@ -168,6 +169,7 @@ export default function Project() {
             ProjectGroup: data.projectInfo[i].ProjectGroup,
             ProjectName: data.projectInfo[i].ProjectName,
             ProjectAddress: data.projectInfo[i].Address,
+            AddressLabel: data.projectInfo[i].AddressLabel,
           });
           console.log(data.projectInfo[i]);
           break;
@@ -180,6 +182,7 @@ export default function Project() {
         ProjectGroup: "",
         ProjectName: "",
         ProjectAddress: "",
+        AddressLabel: "",
       });
     }
   }, [jobNumberSelect]);
@@ -327,6 +330,17 @@ export default function Project() {
             value={rightPanelState.ProjectName}
           >
             Project Name: {rightPanelState.ProjectName}
+          </TextField>
+          <br />
+          <br />
+          <TextField
+            className={styles["right__project-address-label"]}
+            id="AddressLabel"
+            label="Address Label"
+            defaultValue={0}
+            value={rightPanelState.AddressLabel}
+          >
+            Address Label: {rightPanelState.AddressLabel}
           </TextField>
           <br />
           <br />
