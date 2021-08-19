@@ -431,7 +431,7 @@ export default function Project() {
           <TextField
             className={styles["right__project-distance"]}
             id="Distance"
-            label="Distance"
+            label="Distance from HQ"
             defaultValue={0}
             value={
               rightPanelState.Distance == ""
