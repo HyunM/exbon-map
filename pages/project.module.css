@@ -26,7 +26,7 @@
   font-weight: 600;
 }
 .right__project-name input {
-  width: 300px;
+  width: 380px;
   font-weight: 600;
 }
 .right__project-address-label input {
@@ -43,7 +43,19 @@
   font-weight: 600;
 }
 
-.right__project-duration input {
+.right__project-director input {
+  width: 155px;
+  font-weight: 600;
+}
+.right__project-associate1 input {
+  width: 155px;
+  font-weight: 600;
+}
+.right__project-associate2 input {
+  width: 155px;
+  font-weight: 600;
+}
+.right__project-associate3 input {
   width: 155px;
   font-weight: 600;
 }

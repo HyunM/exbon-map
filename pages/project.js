@@ -9,6 +9,9 @@ import styles from "./project.module.css";
 import Switch from "@material-ui/core/Switch";
 import axios from "axios";
 
+let tempProjectLocation = [];
+let tempProjectInfo = [];
+
 export default function Project() {
   const ex1 = {
     center: {
@@ -120,6 +123,11 @@ export default function Project() {
     ProjectAddress: "",
     AddressLabel: "",
     Distance: "",
+    Director: "",
+    PIC: "",
+    Associate1: "",
+    Associate2: "",
+    Associate3: "",
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
@@ -130,17 +138,15 @@ export default function Project() {
   };
 
   useEffect(async () => {
-    let tempProjectLocation = [];
-    let tempProjectInfo = [];
-    await axios({
-      method: "get",
-      url: `/api/project-same-address`,
-      timeout: 5000, // 5 seconds timeout
-      headers: {},
-    }).then(response => {
-      tempProjectLocation = response.data;
-      // console.log(response);
-    });
+    // await axios({
+    //   method: "get",
+    //   url: `/api/project-same-address`,
+    //   timeout: 5000, // 5 seconds timeout
+    //   headers: {},
+    // }).then(response => {
+    //   tempProjectLocation = response.data;
+    //   // console.log(response);
+    // });
 
     await axios({
       method: "get",
@@ -148,7 +154,8 @@ export default function Project() {
       timeout: 5000, // 5 seconds timeout
       headers: {},
     }).then(response => {
-      tempProjectInfo = response.data;
+      tempProjectInfo = response.data.recordsets[0];
+      tempProjectLocation = response.data.recordsets[1];
       // console.log(response);
     });
 
@@ -171,6 +178,11 @@ export default function Project() {
             ProjectAddress: data.projectInfo[i].Address,
             AddressLabel: data.projectInfo[i].AddressLabel,
             Distance: data.projectInfo[i].Distance,
+            Director: data.projectInfo[i].Director,
+            PIC: data.projectInfo[i].PIC,
+            Associate1: data.projectInfo[i].Associate1,
+            Associate2: data.projectInfo[i].Associate2,
+            Associate3: data.projectInfo[i].Associate3,
           });
           break;
         }
@@ -184,6 +196,11 @@ export default function Project() {
         ProjectAddress: "",
         AddressLabel: "",
         Distance: "",
+        Director: "",
+        PIC: "",
+        Associate1: "",
+        Associate2: "",
+        Associate3: "",
       });
     }
   }, [jobNumberSelect]);
@@ -368,36 +385,101 @@ export default function Project() {
             Distance: {rightPanelState.Distance} mi
           </TextField>
         </div>
-        <div>
+        <div
+          style={{
+            height: "300px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            marginTop: "50px",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <p
+              style={{
+                margin: "0px",
+                marginRight: "10px",
+                fontFamily: "sans-serif",
+              }}
+            >
+              PIC
+            </p>
+            <select
+              className={styles["select-job-number"]}
+              value={jobNumberSelect}
+              onChange={e => setJobNumberSelect(e.target.value)}
+            >
+              <option value={0}>--------</option>
+              {/* {state.Label.map((item, index) => {
+                return (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                );
+              })} */}
+              {/* {console.log(state.Label)} */}
+            </select>
+          </div>
           <div>
-            {/* <TextField
-              className={styles["right__project-distance"]}
-              id="Distance"
-              label="Distance"
-              defaultValue={0}
-              value={
-                rightPanelState.Distance == ""
-                  ? ""
-                  : rightPanelState.Distance + " miles"
-              }
-            >
-              Distance: {rightPanelState.Distance} mi
-            </TextField>
-            <br />
-            <br />
-            <TextField
-              className={styles["right__project-distance"]}
-              id="Distance"
-              label="Distance"
-              defaultValue={0}
-              value={
-                rightPanelState.Distance == ""
-                  ? ""
-                  : rightPanelState.Distance + " miles"
-              }
-            >
-              Distance: {rightPanelState.Distance} mi
-            </TextField> */}
+            {rightPanelState.Director && (
+              <>
+                <TextField
+                  className={styles["right__project-director"]}
+                  id="Director"
+                  label="Director"
+                  defaultValue={0}
+                  value={rightPanelState.Director}
+                >
+                  Director: {rightPanelState.Director}
+                </TextField>
+                <br />
+                <br />
+              </>
+            )}
+            {rightPanelState.Associate1 && (
+              <>
+                <TextField
+                  className={styles["right__project-associate1"]}
+                  id="Associate1"
+                  label="Associate1"
+                  defaultValue={0}
+                  value={rightPanelState.Associate1}
+                >
+                  Associate1: {rightPanelState.Associate1}
+                </TextField>
+                <br />
+                <br />
+              </>
+            )}
+            {rightPanelState.Associate2 && (
+              <>
+                <TextField
+                  className={styles["right__project-associate2"]}
+                  id="Associate2"
+                  label="Associate2"
+                  defaultValue={0}
+                  value={rightPanelState.Associate2}
+                >
+                  Associate2: {rightPanelState.Associate2}
+                </TextField>
+                <br />
+                <br />
+              </>
+            )}
+            {rightPanelState.Associate3 && (
+              <>
+                <TextField
+                  className={styles["right__project-associate3"]}
+                  id="Associate3"
+                  label="Associate3"
+                  defaultValue={0}
+                  value={rightPanelState.Associate3}
+                >
+                  Associate3: {rightPanelState.Associate3}
+                </TextField>
+                <br />
+              </>
+            )}
           </div>
           <div
             style={{

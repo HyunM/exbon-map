@@ -20,7 +20,7 @@ const projectInfo = (req, res) => {
               console.error(err);
               return resolve();
             }
-            const response = recordset.recordset;
+            const response = recordset;
             res.status(200).json(response);
             return resolve();
           });
