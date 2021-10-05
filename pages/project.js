@@ -16,6 +16,18 @@ let tempProjectLocation = [];
 let tempProjectInfo = [];
 let tempPICList = [];
 
+const formatDate = date => {
+  let d = new Date(date),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [month, day, year].join("/");
+};
+
 export default function Project() {
   const ex1 = {
     center: {
@@ -141,6 +153,7 @@ export default function Project() {
   });
 
   const [satelliteState, setSatelliteState] = useState(false);
+  const [timeData, setTimeData] = useState({});
   const [data, setData] = useState({ temp: 0 });
   const office = {
     lat: 33.76179647059898,
@@ -270,6 +283,19 @@ export default function Project() {
     }
   }, [PICSelect]);
 
+  useEffect(() => {
+    axios({
+      method: "get",
+      url: `/api/map-direction?EmployeeID=0&selectedDate=${formatDate(
+        selectedDate
+      )}`,
+      timeout: 5000, // 5 seconds timeout
+      headers: {},
+    }).then(response => {
+      setTimeData(response.data);
+    });
+  }, [selectedDate]);
+
   const handleApiLoaded = (map, maps) => {
     const directionsService = new google.maps.DirectionsService();
     // const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -280,15 +306,15 @@ export default function Project() {
     });
     directionsRenderer.setMap(map);
 
-    const timeData = [
-      { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
-      { date: "2021-07-25 14:15:53", lat: 33.731713, lng: -117.954614 },
-      { date: "2021-07-25 14:16:45", lat: 33.7264542, lng: -117.95469 },
-      { date: "2021-07-25 14:17:10", lat: 33.7215794, lng: -117.9546431 },
-      { date: "2021-07-25 14:17:37", lat: 33.716913, lng: -117.9546024 },
-      { date: "2021-07-25 14:32:20", lat: 33.7341136, lng: -117.9546168 },
-      { date: "2021-07-25 14:33:22", lat: 33.73922288, lng: -117.9547119 },
-    ];
+    // const timeData = [
+    //   { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
+    //   { date: "2021-07-25 14:15:53", lat: 33.731713, lng: -117.954614 },
+    //   { date: "2021-07-25 14:16:45", lat: 33.7264542, lng: -117.95469 },
+    //   { date: "2021-07-25 14:17:10", lat: 33.7215794, lng: -117.9546431 },
+    //   { date: "2021-07-25 14:17:37", lat: 33.716913, lng: -117.9546024 },
+    //   { date: "2021-07-25 14:32:20", lat: 33.7341136, lng: -117.9546168 },
+    //   { date: "2021-07-25 14:33:22", lat: 33.73922288, lng: -117.9547119 },
+    // ];
 
     let wayPoints = [];
     for (let i = 0; i < timeData.length; i++) {
@@ -298,62 +324,65 @@ export default function Project() {
         });
       }
     }
-    const origin = {
-      lat: timeData[0].lat,
-      lng: timeData[0].lng,
-    };
-    const destination = {
-      lat: timeData[timeData.length - 1].lat,
-      lng: timeData[timeData.length - 1].lng,
-    };
+    if (timeData[0] != undefined) {
+      const origin = {
+        lat: timeData[0].lat,
+        lng: timeData[0].lng,
+      };
+      const destination = {
+        lat: timeData[timeData.length - 1].lat,
+        lng: timeData[timeData.length - 1].lng,
+      };
 
-    for (let i = 0; i < timeData.length; i++) {
-      const contentString = `<div><p>${timeData[i].date}</p></div>`;
-      const infowindow = new google.maps.InfoWindow({
-        content: contentString,
-      });
-      const location = { lat: timeData[i].lat, lng: timeData[i].lng };
-      const marker = new google.maps.Marker({
-        //marker 생성
-        position: location,
-        map,
-        label: String.fromCharCode(65 + i),
-      });
-      marker.addListener("click", () => {
-        // marker click event
-        infowindow.open({
-          anchor: marker,
-          map,
-          shouldFocus: false,
+      for (let i = 0; i < timeData.length; i++) {
+        const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
+        const infowindow = new google.maps.InfoWindow({
+          content: contentString,
         });
-      });
-    }
-
-    directionsService.route(
-      {
-        origin: origin,
-        destination: destination,
-        travelMode: google.maps.TravelMode.DRIVING,
-        waypoints: wayPoints,
-      },
-
-      (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-          directionsRenderer.setDirections(result);
-        } else {
-          console.error(`error fetching directions ${result}`);
-        }
+        const location = { lat: timeData[i].lat, lng: timeData[i].lng };
+        const marker = new google.maps.Marker({
+          //marker 생성
+          position: location,
+          map,
+          label: String.fromCharCode(65 + i),
+        });
+        marker.addListener("click", () => {
+          // marker click event
+          infowindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false,
+          });
+        });
       }
-    );
 
-    function callback(response, status) {
-      // See Parsing the Results for
-      // the basics of a callback function.
+      directionsService.route(
+        {
+          origin: origin,
+          destination: destination,
+          travelMode: google.maps.TravelMode.DRIVING,
+          waypoints: wayPoints,
+        },
+
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            directionsRenderer.setDirections(result);
+          } else {
+            console.error(`error fetching directions ${result}`);
+          }
+        }
+      );
+
+      function callback(response, status) {
+        // See Parsing the Results for
+        // the basics of a callback function.
+      }
     }
   };
 
   return (
     <div style={{ display: "flex" }}>
+      {console.log(timeData)}
       <div style={{ height: "98vh", width: "80%" }}>
         {data.temp == 1 && (
           <GoogleMapReact

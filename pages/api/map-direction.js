@@ -12,8 +12,8 @@ const projectInfo = (req, res) => {
             return resolve();
           }
           const request = new mssql.Request();
-          const selectedDate = req.query.selectedDate;
           const employeeID = req.query.EmployeeID;
+          const selectedDate = req.query.selectedDate;
 
           const query = `EXEC [Hammer].[dbo].[Map_Direction]
           ${employeeID}, '${selectedDate}'`;
