@@ -127,6 +127,7 @@ export default function Project() {
     timeZone: "America/Los_Angeles",
   });
   const [selectedDate, setSelectedDate] = useState(now);
+  const [loadAPI, setLoadAPI] = useState("");
   const [state, setState] = useState({
     Label: "",
     MaxProjectID: "",
@@ -296,14 +297,20 @@ export default function Project() {
     });
   }, [selectedDate]);
 
+  useEffect(() => {
+    if (loadAPI != "") {
+      handleApiLoaded(loadAPI.map, loadAPI.maps);
+    }
+  }, [loadAPI, timeData]);
+
   const handleApiLoaded = (map, maps) => {
     const directionsService = new google.maps.DirectionsService();
-    // const directionsRenderer = new google.maps.DirectionsRenderer({
-    //   suppressMarkers: true,
-    // });
     const directionsRenderer = new google.maps.DirectionsRenderer({
       suppressMarkers: true,
     });
+    // const directionsRenderer = new google.maps.DirectionsRenderer({
+    //   suppressMarkers: true,
+    // });
     directionsRenderer.setMap(map);
 
     // const timeData = [
@@ -395,7 +402,9 @@ export default function Project() {
                 : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
             }
             yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+            onGoogleApiLoaded={({ map, maps }) =>
+              setLoadAPI({ map: map, maps: maps })
+            }
           >
             {data.projectLocation.map(item => {
               return (
