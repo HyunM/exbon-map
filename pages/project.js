@@ -15,7 +15,10 @@ import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 let tempProjectLocation = [];
 let tempProjectInfo = [];
 let tempPICList = [];
-
+let check = 0;
+let d1 = [];
+let r1 = [];
+let currentMarker = [];
 const formatDate = date => {
   let d = new Date(date),
     month = "" + (d.getMonth() + 1),
@@ -295,95 +298,176 @@ export default function Project() {
     }).then(response => {
       setTimeData(response.data);
     });
-  }, [selectedDate]);
+  }, [loadAPI, selectedDate]);
 
   useEffect(() => {
     if (loadAPI != "") {
       handleApiLoaded(loadAPI.map, loadAPI.maps);
     }
-  }, [loadAPI, timeData]);
+  }, [timeData]);
 
   const handleApiLoaded = (map, maps) => {
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer({
-      suppressMarkers: true,
-    });
-    // const directionsRenderer = new google.maps.DirectionsRenderer({
-    //   suppressMarkers: true,
-    // });
-    directionsRenderer.setMap(map);
+    if (check == 0) {
+      const directionsService = new google.maps.DirectionsService();
+      d1 = directionsService;
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: true,
+      });
+      r1 = directionsRenderer;
+      directionsRenderer.setMap(map);
+      check = 1;
+      // const timeData = [
+      //   { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
+      //   { date: "2021-07-25 14:15:53", lat: 33.731713, lng: -117.954614 },
+      //   { date: "2021-07-25 14:16:45", lat: 33.7264542, lng: -117.95469 },
+      //   { date: "2021-07-25 14:17:10", lat: 33.7215794, lng: -117.9546431 },
+      //   { date: "2021-07-25 14:17:37", lat: 33.716913, lng: -117.9546024 },
+      //   { date: "2021-07-25 14:32:20", lat: 33.7341136, lng: -117.9546168 },
+      //   { date: "2021-07-25 14:33:22", lat: 33.73922288, lng: -117.9547119 },
+      // ];
 
-    // const timeData = [
-    //   { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
-    //   { date: "2021-07-25 14:15:53", lat: 33.731713, lng: -117.954614 },
-    //   { date: "2021-07-25 14:16:45", lat: 33.7264542, lng: -117.95469 },
-    //   { date: "2021-07-25 14:17:10", lat: 33.7215794, lng: -117.9546431 },
-    //   { date: "2021-07-25 14:17:37", lat: 33.716913, lng: -117.9546024 },
-    //   { date: "2021-07-25 14:32:20", lat: 33.7341136, lng: -117.9546168 },
-    //   { date: "2021-07-25 14:33:22", lat: 33.73922288, lng: -117.9547119 },
-    // ];
-
-    let wayPoints = [];
-    for (let i = 0; i < timeData.length; i++) {
-      if (i != 0 && i != timeData.length - 1) {
-        wayPoints.push({
-          location: new google.maps.LatLng(timeData[i].lat, timeData[i].lng),
-        });
-      }
-    }
-    if (timeData[0] != undefined) {
-      const origin = {
-        lat: timeData[0].lat,
-        lng: timeData[0].lng,
-      };
-      const destination = {
-        lat: timeData[timeData.length - 1].lat,
-        lng: timeData[timeData.length - 1].lng,
-      };
-
+      let wayPoints = [];
       for (let i = 0; i < timeData.length; i++) {
-        const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
-        const infowindow = new google.maps.InfoWindow({
-          content: contentString,
-        });
-        const location = { lat: timeData[i].lat, lng: timeData[i].lng };
-        const marker = new google.maps.Marker({
-          //marker 생성
-          position: location,
-          map,
-          label: String.fromCharCode(65 + i),
-        });
-        marker.addListener("click", () => {
-          // marker click event
-          infowindow.open({
-            anchor: marker,
-            map,
-            shouldFocus: false,
+        if (i != 0 && i != timeData.length - 1) {
+          wayPoints.push({
+            location: new google.maps.LatLng(timeData[i].lat, timeData[i].lng),
           });
-        });
+        }
       }
+      if (timeData[0] != undefined) {
+        const origin = {
+          lat: timeData[0].lat,
+          lng: timeData[0].lng,
+        };
+        const destination = {
+          lat: timeData[timeData.length - 1].lat,
+          lng: timeData[timeData.length - 1].lng,
+        };
 
-      directionsService.route(
-        {
-          origin: origin,
-          destination: destination,
-          travelMode: google.maps.TravelMode.DRIVING,
-          waypoints: wayPoints,
-        },
+        for (let i = 0; i < timeData.length; i++) {
+          const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
+          const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+          });
+          const location = { lat: timeData[i].lat, lng: timeData[i].lng };
+          const marker = new google.maps.Marker({
+            //marker 생성
+            position: location,
+            map,
+            label: String.fromCharCode(65 + i),
+          });
+          currentMarker.push(marker);
+          marker.addListener("click", () => {
+            // marker click event
+            infowindow.open({
+              anchor: marker,
+              map,
+              shouldFocus: false,
+            });
+          });
+        }
 
-        (result, status) => {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsRenderer.setDirections(result);
-          } else {
-            console.error(`error fetching directions ${result}`);
+        directionsService.route(
+          {
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING,
+            waypoints: wayPoints,
+          },
+
+          (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              directionsRenderer.setDirections(result);
+            } else {
+              console.error(`error fetching directions ${result}`);
+            }
+          }
+        );
+      }
+    } else {
+      if (timeData[0] != undefined) {
+        r1.setMap(map);
+
+        let wayPoints = [];
+        for (let i = 0; i < timeData.length; i++) {
+          if (i != 0 && i != timeData.length - 1) {
+            wayPoints.push({
+              location: new google.maps.LatLng(
+                timeData[i].lat,
+                timeData[i].lng
+              ),
+            });
           }
         }
-      );
 
-      function callback(response, status) {
-        // See Parsing the Results for
-        // the basics of a callback function.
+        const origin = {
+          lat: timeData[0].lat,
+          lng: timeData[0].lng,
+        };
+        const destination = {
+          lat: timeData[timeData.length - 1].lat,
+          lng: timeData[timeData.length - 1].lng,
+        };
+
+        //delete previous markers
+        if (currentMarker.length > 0) {
+          for (let i = 0; i < currentMarker.length; i++) {
+            currentMarker[i].setMap(null);
+          }
+        }
+
+        for (let i = 0; i < timeData.length; i++) {
+          const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
+          const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+          });
+          const location = { lat: timeData[i].lat, lng: timeData[i].lng };
+          const marker = new google.maps.Marker({
+            //marker 생성
+            position: location,
+            map,
+            label: String.fromCharCode(65 + i),
+          });
+          currentMarker.push(marker);
+          marker.addListener("click", () => {
+            // marker click event
+            infowindow.open({
+              anchor: marker,
+              map,
+              shouldFocus: false,
+            });
+          });
+        }
+
+        d1.route(
+          {
+            origin: origin,
+            destination: destination,
+            travelMode: google.maps.TravelMode.DRIVING,
+            waypoints: wayPoints,
+          },
+
+          (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              r1.setDirections(result);
+            } else {
+              console.error(`error fetching directions ${result}`);
+            }
+          }
+        );
+      } else {
+        if (currentMarker.length > 0) {
+          for (let i = 0; i < currentMarker.length; i++) {
+            currentMarker[i].setMap(null);
+          }
+        }
+        r1.setMap(null);
       }
+    }
+
+    function callback(response, status) {
+      // See Parsing the Results for
+      // the basics of a callback function.
     }
   };
 
