@@ -668,7 +668,11 @@ export default function Project() {
                   Job Number
                 </p>
                 <select className={styles["select-job-number"]}>
-                  <option value={state.Label}>{state.Label}</option>
+                  {state.Label == 0 ? (
+                    <option value={state.Label}> -------- </option>
+                  ) : (
+                    <option value={state.Label}>{state.Label} </option>
+                  )}
                 </select>
               </div>
             )}
