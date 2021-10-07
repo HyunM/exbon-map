@@ -16,8 +16,11 @@ let tempProjectLocation = [];
 let tempProjectInfo = [];
 let tempPICList = [];
 let check = 0;
+let checkSetMap = 1;
 let ds = [];
 let dr = [];
+let directionsService;
+let directionsRenderer;
 let currentMarker = [];
 const formatDate = date => {
   let d = new Date(date),
@@ -309,13 +312,11 @@ export default function Project() {
   const handleApiLoaded = (map, maps) => {
     //Initializing map
     if (check == 0) {
-      const directionsService = new google.maps.DirectionsService();
-      ds = directionsService;
-      const directionsRenderer = new google.maps.DirectionsRenderer({
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
         suppressMarkers: true,
       });
       directionsRenderer.setMap(map);
-      dr = directionsRenderer;
       check = 1;
       // const timeData = [
       //   { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
@@ -387,7 +388,9 @@ export default function Project() {
       }
     } else {
       if (timeData[0] != undefined) {
-        dr.setMap(map);
+        if (checkSetMap == 0) {
+          directionsRenderer.setMap(map);
+        }
         let wayPoints = [];
         for (let i = 0; i < timeData.length; i++) {
           if (i != 0 && i != timeData.length - 1) {
@@ -439,7 +442,7 @@ export default function Project() {
           });
         }
 
-        ds.route(
+        directionsService.route(
           {
             //DirectionsRequest object literal
             origin: origin,
@@ -450,7 +453,7 @@ export default function Project() {
 
           (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-              dr.setDirections(result);
+              directionsRenderer.setDirections(result);
             } else {
               alert(`error fetching directions ${result}. Status: ${status}`);
             }
@@ -462,7 +465,8 @@ export default function Project() {
             currentMarker[i].setMap(null);
           }
         }
-        dr.setMap(null);
+        directionsRenderer.setMap(null);
+        checkSetMap = 0;
       }
     }
 
