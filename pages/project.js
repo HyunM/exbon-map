@@ -16,8 +16,8 @@ let tempProjectLocation = [];
 let tempProjectInfo = [];
 let tempPICList = [];
 let check = 0;
-let d1 = [];
-let r1 = [];
+let ds = [];
+let dr = [];
 let currentMarker = [];
 const formatDate = date => {
   let d = new Date(date),
@@ -307,14 +307,15 @@ export default function Project() {
   }, [timeData]);
 
   const handleApiLoaded = (map, maps) => {
+    //Initializing map
     if (check == 0) {
       const directionsService = new google.maps.DirectionsService();
-      d1 = directionsService;
+      ds = directionsService;
       const directionsRenderer = new google.maps.DirectionsRenderer({
         suppressMarkers: true,
       });
-      r1 = directionsRenderer;
       directionsRenderer.setMap(map);
+      dr = directionsRenderer;
       check = 1;
       // const timeData = [
       //   { date: "2021-07-25 14:14:36", lat: 33.7379089, lng: -117.9548602 },
@@ -386,8 +387,7 @@ export default function Project() {
       }
     } else {
       if (timeData[0] != undefined) {
-        r1.setMap(map);
-
+        dr.setMap(map);
         let wayPoints = [];
         for (let i = 0; i < timeData.length; i++) {
           if (i != 0 && i != timeData.length - 1) {
@@ -439,8 +439,9 @@ export default function Project() {
           });
         }
 
-        d1.route(
+        ds.route(
           {
+            //DirectionsRequest object literal
             origin: origin,
             destination: destination,
             travelMode: google.maps.TravelMode.DRIVING,
@@ -449,9 +450,9 @@ export default function Project() {
 
           (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-              r1.setDirections(result);
+              dr.setDirections(result);
             } else {
-              console.error(`error fetching directions ${result}`);
+              alert(`error fetching directions ${result}. Status: ${status}`);
             }
           }
         );
@@ -461,7 +462,7 @@ export default function Project() {
             currentMarker[i].setMap(null);
           }
         }
-        r1.setMap(null);
+        dr.setMap(null);
       }
     }
 
