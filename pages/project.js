@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import styles from "./project.module.css";
 import Switch from "@material-ui/core/Switch";
 import axios from "axios";
+import Head from "next/head";
 
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
@@ -22,6 +23,15 @@ let dr = [];
 let directionsService;
 let directionsRenderer;
 let currentMarker = [];
+
+const findEmployeeIDbyName = name => {
+  for (let i = 0; i < tempPICList.length; i++) {
+    if (tempPICList[i].Estimator == name) {
+      return tempPICList[i].EmployeeID;
+    }
+  }
+};
+
 const formatDate = date => {
   let d = new Date(date),
     month = "" + (d.getMonth() + 1),
@@ -291,17 +301,19 @@ export default function Project() {
   }, [PICSelect]);
 
   useEffect(() => {
-    axios({
-      method: "get",
-      url: `/api/map-direction?EmployeeID=0&selectedDate=${formatDate(
-        selectedDate
-      )}`,
-      timeout: 5000, // 5 seconds timeout
-      headers: {},
-    }).then(response => {
-      setTimeData(response.data);
-    });
-  }, [loadAPI, selectedDate]);
+    if (findEmployeeIDbyName(PICSelect) != undefined) {
+      axios({
+        method: "get",
+        url: `/api/map-direction?EmployeeID=${findEmployeeIDbyName(
+          PICSelect
+        )}&selectedDate=${formatDate(selectedDate)}`,
+        timeout: 5000, // 5 seconds timeout
+        headers: {},
+      }).then(response => {
+        setTimeData(response.data);
+      });
+    }
+  }, [loadAPI, selectedDate, PICSelect]);
 
   useEffect(() => {
     if (loadAPI != "") {
@@ -347,7 +359,10 @@ export default function Project() {
         };
 
         for (let i = 0; i < timeData.length; i++) {
-          const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
+          const contentString = `<div><p>${timeData[i].Time.split("T")[1].slice(
+            0,
+            8
+          )}</p></div>`;
           const infowindow = new google.maps.InfoWindow({
             content: contentString,
           });
@@ -420,7 +435,10 @@ export default function Project() {
         }
 
         for (let i = 0; i < timeData.length; i++) {
-          const contentString = `<div><p>${timeData[i].DateTime}</p></div>`;
+          const contentString = `<div><p>${timeData[i].Time.split("T")[1].slice(
+            0,
+            8
+          )}</p></div>`;
           const infowindow = new google.maps.InfoWindow({
             content: contentString,
           });
@@ -467,6 +485,7 @@ export default function Project() {
         }
         directionsRenderer.setMap(null);
         checkSetMap = 0;
+        alert("No record.");
       }
     }
 
@@ -477,42 +496,50 @@ export default function Project() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      {console.log(timeData)}
-      <div style={{ height: "98vh", width: "80%" }}>
-        {data.temp == 1 && (
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: apiKey }}
-            defaultCenter={ex1.center}
-            defaultZoom={ex1.zoom}
-            options={
-              satelliteState == true
-                ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
-                : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
-            }
-            yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map, maps }) =>
-              setLoadAPI({ map: map, maps: maps })
-            }
-          >
-            {data.projectLocation.map(item => {
-              return (
-                <ProjectComponent
-                  lat={item.lat}
-                  lng={item.lng}
-                  key={item.MaxProjectID}
-                  Label={item.Label}
-                  MaxProjectID={item.MaxProjectID}
-                  lat={item.lat}
-                  lng={item.lng}
-                  // ProjectGroup={item.ProjectGroup}
-                  // ProjectName={item.ProjectName}
-                  // ProjectAddress={item.ProjectAddress}
-                />
-              );
-            })}
+    <>
+      <Head>
+        <title>Project Map</title>
+        <link rel="icon" href="/map.ico" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+      </Head>
+      <div style={{ display: "flex" }}>
+        <div style={{ height: "98vh", width: "80%" }}>
+          {data.temp == 1 && (
+            <GoogleMapReact
+              bootstrapURLKeys={{ key: apiKey }}
+              defaultCenter={ex1.center}
+              defaultZoom={ex1.zoom}
+              options={
+                satelliteState == true
+                  ? map => ({ mapTypeId: map.MapTypeId.HYBRID })
+                  : map => ({ mapTypeId: map.MapTypeId.ROADMAP })
+              }
+              yesIWantToUseGoogleMapApiInternals
+              onGoogleApiLoaded={({ map, maps }) =>
+                setLoadAPI({ map: map, maps: maps })
+              }
+            >
+              {data.projectLocation.map(item => {
+                return (
+                  <ProjectComponent
+                    lat={item.lat}
+                    lng={item.lng}
+                    key={item.MaxProjectID}
+                    Label={item.Label}
+                    MaxProjectID={item.MaxProjectID}
+                    lat={item.lat}
+                    lng={item.lng}
+                    // ProjectGroup={item.ProjectGroup}
+                    // ProjectName={item.ProjectName}
+                    // ProjectAddress={item.ProjectAddress}
+                  />
+                );
+              })}
 
-            {/* <ProjectComponent
+              {/* <ProjectComponent
               lat={data.project[1].lat}
               lng={data.project[1].lng}
               key={data.project[1].ProjectID}
@@ -530,23 +557,23 @@ export default function Project() {
               ProjectName={data.project[2].ProjectName}
               ProjectAddress={data.project[2].ProjectAddress}
             /> */}
-            <HQ lat={office.lat} lng={office.lng} />
-          </GoogleMapReact>
-        )}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "98vh",
-          width: "20%",
-          marginLeft: "20px",
-        }}
-      >
-        <div>
-          <br />
-          {/* <TextField
+              <HQ lat={office.lat} lng={office.lng} />
+            </GoogleMapReact>
+          )}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "98vh",
+            width: "20%",
+            marginLeft: "20px",
+          }}
+        >
+          <div>
+            <br />
+            {/* <TextField
             className={styles["right__project-job-number"]}
             id="JobNumber"
             label="Job Number"
@@ -555,267 +582,258 @@ export default function Project() {
               state.Label.toString().length > 3 ? state.Label : state.Label
             }
           /> */}
-          {Array.isArray(state.Label) ? (
-            <div style={{ display: "flex" }}>
-              <p
-                style={{
-                  margin: "0px",
-                  marginRight: "10px",
-                  fontFamily: "sans-serif",
-                }}
-              >
-                Job Number
-              </p>
-              <select
-                className={styles["select-job-number"]}
-                value={jobNumberSelect}
-                onChange={e => setJobNumberSelect(e.target.value)}
-              >
-                <option value={0}>--------</option>
-                {state.Label.map((item, index) => {
-                  return (
-                    <option key={index} value={item}>
-                      {item}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          ) : (
-            <div style={{ display: "flex" }}>
-              <p
-                style={{
-                  margin: "0px",
-                  marginRight: "10px",
-                  fontFamily: "sans-serif",
-                }}
-              >
-                Job Number
-              </p>
-              <select className={styles["select-job-number"]}>
-                <option value={state.Label}>{state.Label}</option>
-              </select>
-            </div>
-          )}
-
-          <br />
-          <TextField
-            className={styles["right__project-group"]}
-            id="ProjectGroup"
-            label="Project Group"
-            defaultValue={0}
-            value={rightPanelState.ProjectGroup}
-          >
-            Project Group: {rightPanelState.ProjectGroup}
-          </TextField>
-          <br />
-          <br />
-          <TextField
-            className={styles["right__project-name"]}
-            id="ProjectName"
-            label="Project Name"
-            defaultValue={0}
-            value={rightPanelState.ProjectName}
-          >
-            Project Name: {rightPanelState.ProjectName}
-          </TextField>
-          <br />
-          <br />
-          <TextField
-            className={styles["right__project-address-label"]}
-            id="AddressLabel"
-            label="Address Label"
-            defaultValue={0}
-            value={rightPanelState.AddressLabel}
-          >
-            Address Label: {rightPanelState.AddressLabel}
-          </TextField>
-          <br />
-          <br />
-          <TextField
-            className={styles["right__project-address"]}
-            id="ProjectAddress"
-            label="Project Address"
-            defaultValue={0}
-            value={rightPanelState.ProjectAddress}
-          >
-            Project Address: {rightPanelState.ProjectAddress}
-          </TextField>
-          <br />
-          <br />
-          <TextField
-            className={styles["right__project-distance"]}
-            id="Distance"
-            label="Distance from HQ"
-            defaultValue={0}
-            value={
-              rightPanelState.Distance == ""
-                ? ""
-                : rightPanelState.Distance + " miles"
-            }
-          >
-            Distance: {rightPanelState.Distance} mi
-          </TextField>
-        </div>
-        <div
-          style={{
-            height: "500px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            marginTop: "50px",
-          }}
-        >
-          <div>
-            <div style={{ display: "flex" }}>
-              <p
-                style={{
-                  margin: "0px",
-                  marginRight: "10px",
-                  fontFamily: "sans-serif",
-                }}
-              >
-                PIC
-              </p>
-              <select
-                className={styles["select-pic"]}
-                value={PICSelect}
-                onChange={e => setPICSelect(e.target.value)}
-              >
-                <option value={""}>---------------------------------</option>
-
-                {data.temp == 1 &&
-                  data.projectPIC.map((item, index) => {
+            {Array.isArray(state.Label) ? (
+              <div style={{ display: "flex" }}>
+                <p
+                  style={{
+                    margin: "0px",
+                    marginRight: "10px",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  Job Number
+                </p>
+                <select
+                  className={styles["select-job-number"]}
+                  value={jobNumberSelect}
+                  onChange={e => setJobNumberSelect(e.target.value)}
+                >
+                  <option value={0}>--------</option>
+                  {state.Label.map((item, index) => {
                     return (
-                      <option key={item.EmployeeID} value={item.Estimator}>
-                        {item.Estimator} ({item.Count})
+                      <option key={index} value={item}>
+                        {item}
                       </option>
                     );
                   })}
-                {/* {console.log(state.Label)} */}
-              </select>
-            </div>
-            {PICSelect != "" && (
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                  disableToolbar
-                  variant="inline"
-                  margin="normal"
-                  format="MM/dd/yyyy"
-                  autoOk={true}
-                  okLabel=""
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                />
-              </MuiPickersUtilsProvider>
+                </select>
+              </div>
+            ) : (
+              <div style={{ display: "flex" }}>
+                <p
+                  style={{
+                    margin: "0px",
+                    marginRight: "10px",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  Job Number
+                </p>
+                <select className={styles["select-job-number"]}>
+                  <option value={state.Label}>{state.Label}</option>
+                </select>
+              </div>
             )}
-            <div style={{ marginTop: "20px" }}>
-              {rightPanelState.Director && (
-                <>
-                  <TextField
-                    className={styles["right__project-director"]}
-                    id="Director"
-                    label="Director"
-                    defaultValue={0}
-                    value={rightPanelState.Director}
-                  >
-                    Director: {rightPanelState.Director}
-                  </TextField>
-                  <br />
-                  <br />
-                </>
-              )}
-              {rightPanelState.PIC && (
-                <>
-                  <TextField
-                    className={styles["right__project-pic"]}
-                    id="PIC"
-                    label="PIC"
-                    defaultValue={0}
-                    value={rightPanelState.PIC}
-                  >
-                    PIC: {rightPanelState.PIC}
-                  </TextField>
-                  <br />
-                  <br />
-                </>
-              )}
 
-              {rightPanelState.Associate1 && (
-                <>
-                  <TextField
-                    className={styles["right__project-associate1"]}
-                    id="Associate1"
-                    label="Associate1"
-                    defaultValue={0}
-                    value={rightPanelState.Associate1}
-                  >
-                    Associate1: {rightPanelState.Associate1}
-                  </TextField>
-                  <br />
-                  <br />
-                </>
-              )}
-              {rightPanelState.Associate2 && (
-                <>
-                  <TextField
-                    className={styles["right__project-associate2"]}
-                    id="Associate2"
-                    label="Associate2"
-                    defaultValue={0}
-                    value={rightPanelState.Associate2}
-                  >
-                    Associate2: {rightPanelState.Associate2}
-                  </TextField>
-                  <br />
-                  <br />
-                </>
-              )}
-              {rightPanelState.Associate3 && (
-                <>
-                  <TextField
-                    className={styles["right__project-associate3"]}
-                    id="Associate3"
-                    label="Associate3"
-                    defaultValue={0}
-                    value={rightPanelState.Associate3}
-                  >
-                    Associate3: {rightPanelState.Associate3}
-                  </TextField>
-                  <br />
-                </>
-              )}
-            </div>
+            <br />
+            <TextField
+              className={styles["right__project-group"]}
+              id="ProjectGroup"
+              label="Project Group"
+              value={rightPanelState.ProjectGroup}
+            >
+              Project Group: {rightPanelState.ProjectGroup}
+            </TextField>
+            <br />
+            <br />
+            <TextField
+              className={styles["right__project-name"]}
+              id="ProjectName"
+              label="Project Name"
+              value={rightPanelState.ProjectName}
+            >
+              Project Name: {rightPanelState.ProjectName}
+            </TextField>
+            <br />
+            <br />
+            <TextField
+              className={styles["right__project-address-label"]}
+              id="AddressLabel"
+              label="Address Label"
+              value={rightPanelState.AddressLabel}
+            >
+              Address Label: {rightPanelState.AddressLabel}
+            </TextField>
+            <br />
+            <br />
+            <TextField
+              className={styles["right__project-address"]}
+              id="ProjectAddress"
+              label="Project Address"
+              value={rightPanelState.ProjectAddress}
+            >
+              Project Address: {rightPanelState.ProjectAddress}
+            </TextField>
+            <br />
+            <br />
+            <TextField
+              className={styles["right__project-distance"]}
+              id="Distance"
+              label="Distance from HQ"
+              value={
+                rightPanelState.Distance == ""
+                  ? ""
+                  : rightPanelState.Distance + " miles"
+              }
+            >
+              Distance: {rightPanelState.Distance} mi
+            </TextField>
           </div>
           <div
             style={{
+              height: "500px",
               display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
               marginTop: "50px",
             }}
           >
-            <p
+            <div>
+              <div style={{ display: "flex" }}>
+                <p
+                  style={{
+                    margin: "0px",
+                    marginRight: "10px",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  PIC
+                </p>
+                <select
+                  className={styles["select-pic"]}
+                  value={PICSelect}
+                  onChange={e => setPICSelect(e.target.value)}
+                >
+                  <option value={""}>---------------------------------</option>
+
+                  {data.temp == 1 &&
+                    data.projectPIC.map((item, index) => {
+                      return (
+                        <option key={item.EmployeeID} value={item.Estimator}>
+                          {item.Estimator} ({item.Count})
+                        </option>
+                      );
+                    })}
+                  {/* {console.log(state.Label)} */}
+                </select>
+              </div>
+              {PICSelect != "" && (
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DatePicker
+                    disableToolbar
+                    variant="inline"
+                    margin="normal"
+                    format="MM/dd/yyyy"
+                    autoOk={true}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    className={styles["date-picker"]}
+                  />
+                </MuiPickersUtilsProvider>
+              )}
+              <div style={{ marginTop: "20px" }}>
+                {rightPanelState.Director && (
+                  <>
+                    <TextField
+                      className={styles["right__project-director"]}
+                      id="Director"
+                      label="Director"
+                      value={rightPanelState.Director}
+                    >
+                      Director: {rightPanelState.Director}
+                    </TextField>
+                    <br />
+                    <br />
+                  </>
+                )}
+                {rightPanelState.PIC && (
+                  <>
+                    <TextField
+                      className={styles["right__project-pic"]}
+                      id="PIC"
+                      label="PIC"
+                      value={rightPanelState.PIC}
+                    >
+                      PIC: {rightPanelState.PIC}
+                    </TextField>
+                    <br />
+                    <br />
+                  </>
+                )}
+
+                {rightPanelState.Associate1 && (
+                  <>
+                    <TextField
+                      className={styles["right__project-associate1"]}
+                      id="Associate1"
+                      label="Associate1"
+                      value={rightPanelState.Associate1}
+                    >
+                      Associate1: {rightPanelState.Associate1}
+                    </TextField>
+                    <br />
+                    <br />
+                  </>
+                )}
+                {rightPanelState.Associate2 && (
+                  <>
+                    <TextField
+                      className={styles["right__project-associate2"]}
+                      id="Associate2"
+                      label="Associate2"
+                      value={rightPanelState.Associate2}
+                    >
+                      Associate2: {rightPanelState.Associate2}
+                    </TextField>
+                    <br />
+                    <br />
+                  </>
+                )}
+                {rightPanelState.Associate3 && (
+                  <>
+                    <TextField
+                      className={styles["right__project-associate3"]}
+                      id="Associate3"
+                      label="Associate3"
+                      value={rightPanelState.Associate3}
+                    >
+                      Associate3: {rightPanelState.Associate3}
+                    </TextField>
+                    <br />
+                  </>
+                )}
+              </div>
+            </div>
+            <div
               style={{
-                fontFamily: "sans-serif",
-                marginTop: "10px",
-                fontWeight: "500",
-                color: "#807a7a",
+                display: "flex",
+                marginTop: "50px",
               }}
             >
-              Satellite
-            </p>
-            <Switch
-              checked={satelliteState}
-              onChange={
-                satelliteState == true
-                  ? () => setSatelliteState(false)
-                  : () => setSatelliteState(true)
-              }
-              name="check"
-              inputProps={{ "aria-label": "primary checkbox" }}
-            />
+              <p
+                style={{
+                  fontFamily: "sans-serif",
+                  marginTop: "10px",
+                  fontWeight: "500",
+                  color: "#807a7a",
+                }}
+              >
+                Satellite
+              </p>
+              <Switch
+                checked={satelliteState}
+                onChange={
+                  satelliteState == true
+                    ? () => setSatelliteState(false)
+                    : () => setSatelliteState(true)
+                }
+                name="check"
+                inputProps={{ "aria-label": "primary checkbox" }}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
