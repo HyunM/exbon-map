@@ -26,7 +26,7 @@ let currentMarker = [];
 
 const findEmployeeIDbyName = name => {
   for (let i = 0; i < tempPICList.length; i++) {
-    if (tempPICList[i].Estimator == name) {
+    if (tempPICList[i].EmployeeName == name) {
       return tempPICList[i].EmployeeID;
     }
   }
@@ -400,6 +400,8 @@ export default function Project() {
             }
           }
         );
+      } else {
+        alert("No activity record.");
       }
     } else {
       if (timeData[0] != undefined) {
@@ -485,7 +487,7 @@ export default function Project() {
         }
         directionsRenderer.setMap(null);
         checkSetMap = 0;
-        alert("No record.");
+        alert("No activity record.");
       }
     }
 
@@ -573,6 +575,52 @@ export default function Project() {
         >
           <div>
             <br />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {/* <p
+                  style={{
+                    margin: "0px",
+                    marginRight: "10px",
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  Employee
+                </p> */}
+              <select
+                className={styles["select-pic"]}
+                value={PICSelect}
+                onChange={e => setPICSelect(e.target.value)}
+              >
+                <option value={""}>------------------------------------</option>
+
+                {data.temp == 1 &&
+                  data.projectPIC.map((item, index) => {
+                    return (
+                      <option key={item.EmployeeID} value={item.EmployeeName}>
+                        {item.EmployeeName} ({item.Count})
+                      </option>
+                    );
+                  })}
+                {/* {console.log(state.Label)} */}
+              </select>
+
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DatePicker
+                  disableToolbar
+                  variant="inline"
+                  margin="normal"
+                  format="MM/dd/yyyy"
+                  autoOk={true}
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  className={
+                    PICSelect != ""
+                      ? styles["date-picker"]
+                      : styles["date-picker-display-none"]
+                  }
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+
             {/* <TextField
             className={styles["right__project-job-number"]}
             id="JobNumber"
@@ -689,48 +737,6 @@ export default function Project() {
             }}
           >
             <div>
-              <div style={{ display: "flex" }}>
-                <p
-                  style={{
-                    margin: "0px",
-                    marginRight: "10px",
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  PIC
-                </p>
-                <select
-                  className={styles["select-pic"]}
-                  value={PICSelect}
-                  onChange={e => setPICSelect(e.target.value)}
-                >
-                  <option value={""}>---------------------------------</option>
-
-                  {data.temp == 1 &&
-                    data.projectPIC.map((item, index) => {
-                      return (
-                        <option key={item.EmployeeID} value={item.Estimator}>
-                          {item.Estimator} ({item.Count})
-                        </option>
-                      );
-                    })}
-                  {/* {console.log(state.Label)} */}
-                </select>
-              </div>
-              {PICSelect != "" && (
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    disableToolbar
-                    variant="inline"
-                    margin="normal"
-                    format="MM/dd/yyyy"
-                    autoOk={true}
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    className={styles["date-picker"]}
-                  />
-                </MuiPickersUtilsProvider>
-              )}
               <div style={{ marginTop: "20px" }}>
                 {rightPanelState.Director && (
                   <>

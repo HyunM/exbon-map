@@ -78,16 +78,25 @@
 
 .select-pic {
   display: inline-block;
-  height: 20px;
-  width: 200px;
+  height: 25px;
+  min-width: 200px;
+  max-width: 230px;
   color: #74646e;
   border: 1px solid #c8bfc4;
   border-radius: 4px;
   box-shadow: inset 1px 1px 2px #ddd8dc;
   background: #fff;
   font-size: medium;
+  margin-bottom: 20px;
 }
 
 .date-picker {
   width: 90px !important;
+  margin-bottom: 50px !important;
+}
+
+.date-picker-display-none {
+  width: 90px !important;
+  margin-bottom: 50px !important;
+  visibility: hidden;
 }
