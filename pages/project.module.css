@@ -91,8 +91,10 @@
 }
 
 .date-picker {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
   width: 90px !important;
-  margin-bottom: 50px !important;
+  margin-bottom: 70px !important;
 }
 
 .date-picker-display-none {
