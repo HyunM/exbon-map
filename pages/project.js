@@ -634,9 +634,11 @@ export default function Project() {
                     }
                   />
                 </MuiPickersUtilsProvider>
-                <p className={styles["activity"]}>
-                  <strong>{timeData.length}</strong> activities found
-                </p>
+                {PICSelect != "" && (
+                  <p className={styles["activity"]}>
+                    <strong>{timeData.length}</strong> activities found
+                  </p>
+                )}
               </div>
             </div>
 
