@@ -103,3 +103,12 @@
   width: 90px !important;
   margin-bottom: 70px !important;
 }
+
+.activity {
+  margin-top: 0px !important;
+  padding-top: 10px !important;
+  font-family: "Roboto";
+  margin-left: 15px;
+  font-size: 1rem;
+  color: rgb(77, 72, 72);
+}

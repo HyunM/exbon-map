@@ -409,7 +409,7 @@ export default function Project() {
           );
         }
       } else {
-        alert("No activity record.");
+        // alert("No activity record.");
       }
     } else {
       if (timeData[0] != undefined) {
@@ -502,7 +502,7 @@ export default function Project() {
         }
         directionsRenderer.setMap(null);
         checkSetMap = 0;
-        alert("No activity record.");
+        // alert("No activity record.");
       }
     }
 
@@ -617,23 +617,27 @@ export default function Project() {
                   })}
                 {/* {console.log(state.Label)} */}
               </select>
-
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                  disableToolbar
-                  variant="inline"
-                  margin="normal"
-                  format="MM/dd/yyyy"
-                  autoOk={true}
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  className={
-                    PICSelect != ""
-                      ? styles["date-picker"]
-                      : styles["date-picker-display-none"]
-                  }
-                />
-              </MuiPickersUtilsProvider>
+              <div style={{ display: "flex" }}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DatePicker
+                    disableToolbar
+                    variant="inline"
+                    margin="normal"
+                    format="MM/dd/yyyy"
+                    autoOk={true}
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    className={
+                      PICSelect != ""
+                        ? styles["date-picker"]
+                        : styles["date-picker-display-none"]
+                    }
+                  />
+                </MuiPickersUtilsProvider>
+                <p className={styles["activity"]}>
+                  <strong>{timeData.length}</strong> activities found
+                </p>
+              </div>
             </div>
 
             {/* <TextField
