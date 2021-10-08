@@ -371,7 +371,7 @@ export default function Project() {
             //marker 생성
             position: location,
             map,
-            label: String.fromCharCode(65 + i),
+            label: timeData.length > 25 ? `${i}` : String.fromCharCode(65 + i),
           });
           currentMarker.push(marker);
           marker.addListener("click", () => {
@@ -384,22 +384,30 @@ export default function Project() {
           });
         }
 
-        directionsService.route(
-          {
-            origin: origin,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING,
-            waypoints: wayPoints,
-          },
-
-          (result, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-              directionsRenderer.setDirections(result);
-            } else {
-              console.error(`error fetching directions ${result}`);
+        if (timeData.length > 25) {
+          alert(
+            "There are too many waypoints. Directions are not drawn, but only markers are shown."
+          );
+          directionsRenderer.setMap(null);
+          checkSetMap = 0;
+        } else {
+          directionsService.route(
+            {
+              //DirectionsRequest object literal
+              origin: origin,
+              destination: destination,
+              travelMode: google.maps.TravelMode.DRIVING,
+              waypoints: wayPoints,
+            },
+            (result, status) => {
+              if (status === google.maps.DirectionsStatus.OK) {
+                directionsRenderer.setDirections(result);
+              } else {
+                alert(`error fetching directions ${result}. Status: ${status}`);
+              }
             }
-          }
-        );
+          );
+        }
       } else {
         alert("No activity record.");
       }
@@ -449,7 +457,7 @@ export default function Project() {
             //marker 생성
             position: location,
             map,
-            label: String.fromCharCode(65 + i),
+            label: timeData.length > 25 ? `${i}` : String.fromCharCode(65 + i),
           });
           currentMarker.push(marker);
           marker.addListener("click", () => {
@@ -462,23 +470,30 @@ export default function Project() {
           });
         }
 
-        directionsService.route(
-          {
-            //DirectionsRequest object literal
-            origin: origin,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING,
-            waypoints: wayPoints,
-          },
-
-          (result, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-              directionsRenderer.setDirections(result);
-            } else {
-              alert(`error fetching directions ${result}. Status: ${status}`);
+        if (timeData.length > 25) {
+          alert(
+            "There are too many waypoints. Directions are not drawn, but only markers are shown."
+          );
+          directionsRenderer.setMap(null);
+          checkSetMap = 0;
+        } else {
+          directionsService.route(
+            {
+              //DirectionsRequest object literal
+              origin: origin,
+              destination: destination,
+              travelMode: google.maps.TravelMode.DRIVING,
+              waypoints: wayPoints,
+            },
+            (result, status) => {
+              if (status === google.maps.DirectionsStatus.OK) {
+                directionsRenderer.setDirections(result);
+              } else {
+                alert(`error fetching directions ${result}. Status: ${status}`);
+              }
             }
-          }
-        );
+          );
+        }
       } else {
         if (currentMarker.length > 0) {
           for (let i = 0; i < currentMarker.length; i++) {
