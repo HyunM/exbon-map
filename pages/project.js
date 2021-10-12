@@ -18,6 +18,7 @@ let tempProjectInfo = [];
 let tempPICList = [];
 let check = 0;
 let checkSetMap = 1;
+let checkNullValue = 0;
 let ds = [];
 let dr = [];
 let directionsService;
@@ -322,6 +323,58 @@ export default function Project() {
   }, [timeData]);
 
   const handleApiLoaded = (map, maps) => {
+    if (checkNullValue == 0) {
+      axios({
+        method: "get",
+        url: `/api/map-null`,
+        timeout: 5000, // 5 seconds timeout
+        headers: {},
+      }).then(response => {
+        let result = response.data.recordset;
+        let geocoder = new google.maps.Geocoder();
+        let addressArr = [];
+
+        for (let i = 0; i < result.length; i++) {
+          addressArr.push({
+            address:
+              result[i].Address +
+              " " +
+              result[i].City +
+              " " +
+              result[i].State +
+              " " +
+              result[i].ZipCode,
+          });
+        }
+
+        for (let i = 0; i < addressArr.length; i++) {
+          geocoder.geocode(addressArr[i], (result, status) => {
+            console.log("result");
+            console.log(result);
+            console.log("status");
+            console.log(status);
+          });
+        }
+
+        // if(response.data.recordset.length > 0){
+        //   axios({
+        //     method: "post",
+        //     url: `/api/map-null`,
+        //     timeout: 5000, // 5 seconds timeout
+        //     headers: {},
+        //     data: {
+        //       recordID:
+        //       lat:
+        //       lng:
+        //       distance:
+        //     }
+        //   });
+        // }
+      });
+
+      checkNullValue = 1;
+    }
+
     //Initializing map
     if (check == 0) {
       directionsService = new google.maps.DirectionsService();
