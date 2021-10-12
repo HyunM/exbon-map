@@ -174,8 +174,8 @@ export default function Project() {
   const [timeData, setTimeData] = useState({});
   const [data, setData] = useState({ temp: 0 });
   const office = {
-    lat: 33.76179647059898,
-    lng: -117.92936766691095,
+    lat: 33.7618386,
+    lng: -117.9293167,
   };
 
   useEffect(async () => {
@@ -323,6 +323,8 @@ export default function Project() {
   }, [timeData]);
 
   const handleApiLoaded = (map, maps) => {
+    let final = [];
+    let addressArr = [];
     if (checkNullValue == 0) {
       axios({
         method: "get",
@@ -331,8 +333,8 @@ export default function Project() {
         headers: {},
       }).then(response => {
         let result = response.data.recordset;
+
         let geocoder = new google.maps.Geocoder();
-        let addressArr = [];
 
         for (let i = 0; i < result.length; i++) {
           addressArr.push({
@@ -345,14 +347,63 @@ export default function Project() {
               " " +
               result[i].ZipCode,
           });
+          final.push({
+            recordID: result[i].RecordID,
+            address:
+              result[i].Address +
+              " " +
+              result[i].City +
+              " " +
+              result[i].State +
+              " " +
+              result[i].ZipCode,
+            lat: 0,
+            lng: 0,
+            distance: 0,
+          });
         }
 
         for (let i = 0; i < addressArr.length; i++) {
-          geocoder.geocode(addressArr[i], (result, status) => {
-            console.log("result");
-            console.log(result);
-            console.log("status");
-            console.log(status);
+          geocoder.geocode(addressArr[i], async (result, status) => {
+            final[i].lat = result[0].geometry.location.lat();
+            final[i].lng = result[0].geometry.location.lng();
+            // final[i].lat = result[0].geometry.viewport.tc.g;
+            // final[i].lng = result[0].geometry.viewport.Hb.g;
+
+            // console.log(final);
+
+            let destination = new google.maps.LatLng(
+              final[i].lat,
+              final[i].lng
+            );
+
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix(
+              {
+                origins: [office],
+                destinations: [destination],
+                travelMode: "DRIVING",
+                unitSystem: google.maps.UnitSystem.IMPERIAL,
+              },
+              async (result2, status2) => {
+                final[i].distance = result2.rows[0].elements[0].distance.text
+                  .split(" ")[0]
+                  .replace(",", "");
+                const recordID = parseInt(final[i].recordID);
+                await axios({
+                  method: "POST",
+                  url: `/api/map-null`,
+                  timeout: 5000, // 5 seconds timeout
+                  headers: {},
+                  data: {
+                    recordID: recordID,
+                    lat: final[i].lat,
+                    lng: final[i].lng,
+                    distance: parseFloat(final[i].distance),
+                  },
+                });
+              }
+            );
           });
         }
 

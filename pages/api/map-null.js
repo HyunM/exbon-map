@@ -12,8 +12,6 @@ const projectInfo = (req, res) => {
             return resolve();
           }
           const request = new mssql.Request();
-          const employeeID = req.query.EmployeeID;
-          const selectedDate = req.query.selectedDate;
 
           const query = `EXEC [Hammer].[dbo].[Map_AddressNullCheck]`;
 
@@ -36,17 +34,17 @@ const projectInfo = (req, res) => {
             return resolve();
           }
           const request = new mssql.Request();
+          const recordID = req.body.recordID;
 
           const query = `EXEC [Hammer].[dbo].[Map_UpdateAddressNull]
-          ${req.query.recordID}, ${req.query.lat}, ${req.query.lng}, ${req.query.distance}`;
+          ${recordID}, ${req.body.lat}, ${req.body.lng}, ${req.body.distance}`;
 
           request.query(query, (err, recordset) => {
             if (err) {
               console.error(err);
               return resolve();
             }
-            const response = recordset;
-            res.status(200).json(response);
+            res.status(200).json({ message: "success" });
             return resolve();
           });
         });
