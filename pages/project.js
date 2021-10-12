@@ -63,26 +63,49 @@ export default function Project() {
           ? styles["marker-label-count"]
           : styles["marker-label"]
       }
-      style={{
-        position: "absolute",
-        width: 25,
-        height: 25,
-        left: -40 / 2,
-        top: -40 / 2,
+      style={
+        Label.toString().length < 3
+          ? {
+              position: "absolute",
+              width: 25,
+              height: 25,
+              left: -40 / 2,
+              top: -40 / 2,
 
-        border: "3px solid #f44336",
-        borderRadius: 40,
-        backgroundColor: "white",
-        textAlign: "center",
-        color: "#3f51b5",
-        fontSize: 13,
-        fontWeight: "500",
-        padding: 4,
-        cursor: "pointer",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+              border: "3px solid #3336c9",
+              borderRadius: 5,
+              backgroundColor: "white",
+              textAlign: "center",
+              color: "#3f51b5",
+              fontSize: 13,
+              fontWeight: "500",
+              padding: 4,
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }
+          : {
+              position: "absolute",
+              width: 25,
+              height: 25,
+              left: -40 / 2,
+              top: -40 / 2,
+
+              border: "3px solid #f44336",
+              borderRadius: 40,
+              backgroundColor: "white",
+              textAlign: "center",
+              color: "#3f51b5",
+              fontSize: 13,
+              fontWeight: "500",
+              padding: 4,
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }
+      }
       onClick={() => {
         if (Label.toString().length > 3) {
           setState({
@@ -123,11 +146,11 @@ export default function Project() {
         left: -40 / 2,
         top: -40 / 2,
 
-        border: "3px solid #3639f4",
+        border: "3px solid #13853e",
         borderRadius: 0,
         backgroundColor: "white",
         textAlign: "center",
-        color: "#754fdf",
+        color: "#139e74",
         fontSize: 11,
         fontWeight: "500",
         padding: 4,
