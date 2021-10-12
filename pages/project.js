@@ -59,7 +59,7 @@ export default function Project() {
       className={
         state.MaxProjectID == MaxProjectID
           ? styles["marker-label-select"]
-          : Label.toString().length < 2
+          : Label.toString().length < 3
           ? styles["marker-label-count"]
           : styles["marker-label"]
       }
