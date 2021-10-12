@@ -390,10 +390,6 @@ export default function Project() {
           geocoder.geocode(addressArr[i], async (result, status) => {
             final[i].lat = result[0].geometry.location.lat();
             final[i].lng = result[0].geometry.location.lng();
-            // final[i].lat = result[0].geometry.viewport.tc.g;
-            // final[i].lng = result[0].geometry.viewport.Hb.g;
-
-            // console.log(final);
 
             let destination = new google.maps.LatLng(
               final[i].lat,
