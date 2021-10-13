@@ -19,8 +19,7 @@ let tempPICList = [];
 let check = 0;
 let checkSetMap = 1;
 let checkNullValue = 0;
-let ds = [];
-let dr = [];
+
 let directionsService;
 let directionsRenderer;
 let currentMarker = [];
